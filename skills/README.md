@@ -1,6 +1,8 @@
 # Skills
 
-Reusable Claude skills, organized by department. A skill is a Markdown-driven instruction set (sometimes paired with templates and scripts) that does one job well. Open a department folder to see its skills indexed in a table.
+Reusable Claude Code skills, organized by department. A skill is a Markdown-driven instruction set (sometimes paired with templates and scripts) that does one job well. Open a department folder to see its skills indexed in a table.
+
+If you don't have Claude Code installed and just want to paste a prompt into Claude.ai instead, see [`../prompts/`](../prompts/) — same workflows, no setup.
 
 | Department | Count | What's in it |
 |---|---|---|

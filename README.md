@@ -12,12 +12,15 @@ I'm putting this here for two reasons:
 
 | Folder | What's in it |
 |---|---|
-| [`skills/`](./skills) | Reusable Claude skills organized by department — sales, onboarding, fulfilment, reporting, retention, social, operations. ~50 in total. |
+| [`skills/`](./skills) | Reusable Claude Code skills organized by department — sales, onboarding, fulfilment, reporting, retention, social, operations. ~50 in total. Dev setup required. |
+| [`prompts/`](./prompts) | Paste-into-Claude.ai prompts — no dev setup, no CLI, no install. Same workflows, simpler entry point. Good if you don't write code. |
 | [`apps/`](./apps) | Three full applications: a reporting dashboard (Next.js + Supabase), an ad-generator scaffold, a lead-magnet calculator. |
 | [`docs/`](./docs) | How I think about this stuff — orchestration patterns, the skill inventory, audit reference frameworks, the feedback protocol. |
 | [`.env.example`](./.env.example) | Every env var any tool here expects, in one file. |
 
-A skill is a Markdown-driven Claude instruction set (sometimes paired with scripts and templates) that does one job well. An app is a deployable web project. The docs explain how it all fits together.
+A **skill** is a Markdown-driven Claude Code instruction set (sometimes paired with scripts and templates) that does one job well. A **prompt** is the same idea but designed to paste directly into Claude.ai — no install, no terminal. An **app** is a deployable web project. The docs explain how it all fits together.
+
+If you don't write code, start in [`prompts/`](./prompts). If you do, start in [`skills/`](./skills).
 
 ## Where to start
 
