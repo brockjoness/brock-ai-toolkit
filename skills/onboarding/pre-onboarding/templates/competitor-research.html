@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitor & Market Research — {{CLIENT_NAME}} | {{AGENCY_NAME}}</title>
+    <meta property="og:title" content="Competitor Research — {{CLIENT_NAME}}">
+    <meta property="og:description" content="Market research and competitive analysis prepared by {{AGENCY_NAME}}">
+    <meta property="og:image" content="/api/og">
+
+    {{BASE_STYLES}}
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-header">
+                <div class="client-logo">{{CLIENT_LOGO_HTML}}</div>
+                <div class="agency-logo">{{AGENCY_LOGO_HTML}}</div>
+            </div>
+            <div class="hero-content">
+                <p class="hero-subtitle">{{DATE}} // {{AGENCY_SLUG}} pre-onboarding</p>
+                <h1 class="hero-title">Competitor &<br>Market Research</h1>
+                <p class="hero-tagline">Prepared for {{CLIENT_NAME}}<span class="cursor"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Meta -->
+    <section>
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p class="stat-label">Industry</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">{{INDUSTRY}}</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Research Date</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">{{DATE}}</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Data Sources</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">5</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.5rem;">Reddit, X, Reviews, Competitive</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1: Reddit Brand Sentiment -->
+    <section>
+        <div class="container">
+            <p class="section-label">REDDIT BRAND SENTIMENT</p>
+            {{REDDIT_SENTIMENT_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 2: Customer Pain Points -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">CUSTOMER PAIN POINTS & OBJECTIONS</p>
+            {{PAIN_POINTS_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 3: X/Twitter Sentiment -->
+    <section>
+        <div class="container">
+            <p class="section-label">X / TWITTER CATEGORY SENTIMENT</p>
+            {{TWITTER_SENTIMENT_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 4: Review Platform Analysis -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">REVIEW PLATFORM ANALYSIS</p>
+            {{REVIEW_ANALYSIS_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 5: Competitive Landscape -->
+    <section>
+        <div class="container">
+            <p class="section-label">COMPETITIVE LANDSCAPE</p>
+            {{COMPETITIVE_LANDSCAPE_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 6: Actionable Synthesis -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">ACTIONABLE SYNTHESIS</p>
+            {{ACTIONABLE_SYNTHESIS_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Back to Hub -->
+    <section>
+        <div class="container" style="text-align: center;">
+            <a href="{{HUB_URL}}" class="cta-button">&larr; Back to Pre-Onboarding Hub</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">{{AGENCY_NAME}}</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; {{YEAR}} All rights reserved.</p>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM OPERATIONAL</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

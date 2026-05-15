@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClickFlow Dashboard — Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: #FAFAF8;
+      color: #1A1A18;
+      min-height: 100vh;
+    }
+    .mono { font-family: 'DM Mono', monospace; }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 240px;
+      background: #1A1A18;
+      color: #fff;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+    .sidebar-logo {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      padding: 0 8px;
+    }
+    .sidebar-logo span { color: #2D7A4F; }
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #999;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .sidebar-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .sidebar-item.active { background: rgba(255,255,255,0.1); color: #fff; font-weight: 500; }
+    .sidebar-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .sidebar-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 16px 0; }
+    .sidebar-section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #555;
+      padding: 0 12px;
+      margin-bottom: 4px;
+    }
+    .sidebar-footer {
+      padding: 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sidebar-avatar {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(66,133,244,0.3), rgba(251,188,5,0.3));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600;
+    }
+    .sidebar-user-name { font-size: 13px; font-weight: 500; }
+    .sidebar-user-role { font-size: 11px; color: #777; }
+
+    /* Main content */
+    .main {
+      margin-left: 240px;
+      padding: 28px 32px;
+      max-width: 1280px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .header-left h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .header-left p { font-size: 13px; color: #888; }
+    .header-right { display: flex; gap: 8px; }
+    .date-pill {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: #fff;
+      border: 1px solid #E8E8E6;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #555;
+      cursor: pointer;
+    }
+    .date-pill.active { background: #1A1A18; color: #fff; border-color: #1A1A18; }
+    .btn-export {
+      padding: 8px 16px;
+      background: #2D7A4F;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Metric cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: #fff;
+      border: 1px solid #E8E8E6;
+      border-radius: 16px;
+      padding: 18px 20px;
+    }
+    .metric-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .metric-change {
+      font-size: 12px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .metric-change.up { color: #2D7A4F; }
+    .metric-change.down { color: #D14343; }
+    .metric-change.neutral { color: #888; }
+    .metric-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .metric-dot.green { background: #2D7A4F; }
+    .metric-dot.red { background: #D14343; }
+    .metric-dot.blue { background: #4285F4; }
+    .metric-dot.yellow { background: #FBB005; }
+    .metric-dot.purple { background: #8B5CF6; }
+
+    /* Platform pills */
+    .platform-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .platform-pill {
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      background: #fff;
+      border: 1px solid #E8E8E6;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: all 0.15s;
+    }
+    .platform-pill:hover { border-color: #ccc; }
+    .platform-pill.active { background: #1A1A18; color: #fff; border-color: #1A1A18; }
+    .platform-pill .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .platform-pill .dot.meta { background: #4285F4; }
+    .platform-pill .dot.google { background: #34A853; }
+    .platform-pill .dot.klaviyo { background: #8B5CF6; }
+    .platform-pill .dot.shopify { background: #96BF48; }
+
+    /* Chart cards */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .chart-card {
+      background: #fff;
+      border: 1px solid #E8E8E6;
+      border-radius: 16px;
+      padding: 22px 24px;
+    }
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .chart-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .chart-subtitle {
+      font-size: 12px;
+      color: #888;
+    }
+    .chart-legend {
+      display: flex; gap: 16px;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: #888;
+    }
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Pacing bar */
+    .pacing-bar-container {
+      margin: 16px 0;
+    }
+    .pacing-track {
+      height: 12px;
+      background: #F0F0EE;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .pacing-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+    .pacing-marker {
+      position: absolute;
+      top: -4px;
+      width: 2px;
+      height: 20px;
+      background: #1A1A18;
+      border-radius: 1px;
+    }
+    .pacing-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 11px;
+      color: #999;
+    }
+
+    /* Tables */
+    .table-card {
+      background: #fff;
+      border: 1px solid #E8E8E6;
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin-bottom: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 500;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0 12px 12px;
+      border-bottom: 1px solid #F0F0EE;
+    }
+    td {
+      padding: 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #F8F8F6;
+    }
+    tr:last-child td { border-bottom: none; }
+    .td-mono { font-family: 'DM Mono', monospace; font-size: 13px; }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .badge-green { background: #E8F5EE; color: #2D7A4F; }
+    .badge-red { background: #FDE8E8; color: #D14343; }
+    .badge-yellow { background: #FEF3CD; color: #92700C; }
+    .badge-blue { background: #E8F0FE; color: #1A73E8; }
+    .badge-gray { background: #F0F0EE; color: #666; }
+
+    /* Sparkline inline */
+    .sparkline-cell {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .spark-bar-group {
+      display: flex; align-items: flex-end; gap: 2px; height: 24px;
+    }
+    .spark-bar {
+      width: 4px;
+      border-radius: 2px;
+      background: #E0E0DE;
+    }
+    .spark-bar.active { background: #2D7A4F; }
+    .spark-bar.warning { background: #FBB005; }
+
+    /* Bottom grid */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Alert banner */
+    .alert-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+    .alert-banner.warning {
+      background: #FEF9E7;
+      border: 1px solid #F5E6A3;
+      color: #7A6200;
+    }
+    .alert-banner.success {
+      background: #E8F5EE;
+      border: 1px solid #A8D8B9;
+      color: #1B5E32;
+    }
+    .alert-icon { font-size: 18px; flex-shrink: 0; }
+    .alert-text strong { font-weight: 600; }
+
+    /* Donut center text */
+    .donut-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .donut-center .value { font-size: 28px; font-weight: 700; }
+    .donut-center .label { font-size: 11px; color: #888; }
+
+    .canvas-container { position: relative; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">clickflow<span>.dev</span></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Dashboard</div>
+      <a class="sidebar-item active" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Overview
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        Performance
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        Creatives
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Audiences
+      </a>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Platforms</div>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Meta Ads
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Google Ads
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Klaviyo
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Shopify
+      </a>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section-label">Reports</div>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Weekly Reports
+      </a>
+      <a class="sidebar-item" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Monthly Reports
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-avatar">CC</div>
+      <div>
+        <div class="sidebar-user-name">Example Client</div>
+        <div class="sidebar-user-role">Client</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <h1>Example Client</h1>
+        <p>Last updated: March 24, 2026 at 6:00 AM &nbsp;·&nbsp; Data from Meta, Google, Klaviyo, Shopify</p>
+      </div>
+      <div class="header-right">
+        <div class="date-pill">Last 7 days</div>
+        <div class="date-pill active">This month</div>
+        <div class="date-pill">Last 90 days</div>
+        <button class="btn-export">Export PDF</button>
+      </div>
+    </div>
+
+    <!-- Alert Banner -->
+    <div class="alert-banner warning">
+      <span class="alert-icon">&#9888;</span>
+      <div class="alert-text">
+        <strong>Budget pacing alert:</strong> Meta spend is 14% ahead of target ($18,240 spent of $24,000 with 8 days remaining). Consider reducing daily budget by $45 to finish on pace.
+      </div>
+    </div>
+
+    <!-- Metric Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label"><span class="metric-dot green"></span> Total Spend</div>
+        <div class="metric-value">$24,817</div>
+        <div class="metric-change up">&#9650; 12.3% vs last month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label"><span class="metric-dot blue"></span> Revenue</div>
+        <div class="metric-value">$89,420</div>
+        <div class="metric-change up">&#9650; 18.7% vs last month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label"><span class="metric-dot purple"></span> Blended ROAS</div>
+        <div class="metric-value">3.60x</div>
+        <div class="metric-change up">&#9650; 0.32x vs last month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label"><span class="metric-dot yellow"></span> CPA</div>
+        <div class="metric-value mono">$18.42</div>
+        <div class="metric-change up">&#9660; $2.10 vs last month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label"><span class="metric-dot red"></span> Conversions</div>
+        <div class="metric-value">1,347</div>
+        <div class="metric-change up">&#9650; 23.1% vs last month</div>
+      </div>
+    </div>
+
+    <!-- Platform pills -->
+    <div class="platform-row">
+      <div class="platform-pill active">All Platforms</div>
+      <div class="platform-pill"><span class="dot meta"></span> Meta &nbsp;<span class="mono" style="font-size:12px;color:#888">$18,240</span></div>
+      <div class="platform-pill"><span class="dot google"></span> Google &nbsp;<span class="mono" style="font-size:12px;color:#888">$6,577</span></div>
+      <div class="platform-pill"><span class="dot klaviyo"></span> Klaviyo &nbsp;<span class="mono" style="font-size:12px;color:#888">$12,480 rev</span></div>
+      <div class="platform-pill"><span class="dot shopify"></span> Shopify &nbsp;<span class="mono" style="font-size:12px;color:#888">842 orders</span></div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-grid">
+      <!-- Revenue & Spend Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Revenue vs. Spend</div>
+            <div class="chart-subtitle">Daily, all platforms blended</div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#2D7A4F"></span> Revenue</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#4285F4"></span> Spend</div>
+          </div>
+        </div>
+        <canvas id="revenueChart" height="200"></canvas>
+      </div>
+
+      <!-- Budget Pacing -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Budget Pacing</div>
+            <div class="chart-subtitle">March 2026 · $30,000 target</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <span style="font-size:13px;color:#888;">Meta Ads</span>
+            <span class="mono" style="font-size:13px;">$18,240 / $24,000</span>
+          </div>
+          <div class="pacing-track">
+            <div class="pacing-fill" style="width:76%;background:linear-gradient(90deg,#4285F4,#FBB005);"></div>
+            <div class="pacing-marker" style="left:71%;"></div>
+          </div>
+          <div class="pacing-labels">
+            <span>76% spent</span>
+            <span style="color:#92700C;">14% ahead &#9650;</span>
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <span style="font-size:13px;color:#888;">Google Ads</span>
+            <span class="mono" style="font-size:13px;">$6,577 / $6,000</span>
+          </div>
+          <div class="pacing-track">
+            <div class="pacing-fill" style="width:71%;background:#34A853;"></div>
+            <div class="pacing-marker" style="left:71%;"></div>
+          </div>
+          <div class="pacing-labels">
+            <span>71% spent</span>
+            <span style="color:#2D7A4F;">On pace &#10003;</span>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <span style="font-size:13px;color:#888;">Total</span>
+            <span class="mono" style="font-size:13px;font-weight:600;">$24,817 / $30,000</span>
+          </div>
+          <div class="pacing-track">
+            <div class="pacing-fill" style="width:83%;background:linear-gradient(90deg,#2D7A4F,#4285F4);"></div>
+            <div class="pacing-marker" style="left:71%;"></div>
+          </div>
+          <div class="pacing-labels">
+            <span>83% spent</span>
+            <span style="color:#92700C;">12% ahead</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROAS + Platform Split -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">ROAS by Platform</div>
+            <div class="chart-subtitle">Daily trend · Target: 3.0x</div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:#4285F4"></span> Meta</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#34A853"></span> Google</div>
+            <div class="legend-item"><span class="legend-dot" style="background:rgba(0,0,0,0.15)"></span> Target</div>
+          </div>
+        </div>
+        <canvas id="roasChart" height="200"></canvas>
+      </div>
+
+      <!-- Revenue Split Donut -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Revenue by Channel</div>
+            <div class="chart-subtitle">March 2026 MTD</div>
+          </div>
+        </div>
+        <div class="canvas-container" style="position:relative;width:220px;height:220px;margin:0 auto;">
+          <canvas id="donutChart" width="220" height="220"></canvas>
+          <div class="donut-center">
+            <div class="value">$89.4k</div>
+            <div class="label">Total Revenue</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:12px;">
+          <div class="legend-item"><span class="legend-dot" style="background:#4285F4"></span> Meta $52.1k</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#34A853"></span> Google $24.8k</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#8B5CF6"></span> Klaviyo $12.5k</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Campaigns Table -->
+    <div class="table-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Top Campaigns</div>
+          <div class="chart-subtitle">Ranked by ROAS · March 2026</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th>Platform</th>
+            <th>Spend</th>
+            <th>Revenue</th>
+            <th>ROAS</th>
+            <th>CPA</th>
+            <th>Trend (7d)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:500;">Chill Bottle — UGC Testimonials</td>
+            <td><span class="badge badge-blue">Meta</span></td>
+            <td class="td-mono">$4,280</td>
+            <td class="td-mono">$21,400</td>
+            <td class="td-mono" style="font-weight:600;color:#2D7A4F;">5.00x</td>
+            <td class="td-mono">$12.14</td>
+            <td>
+              <div class="spark-bar-group">
+                <div class="spark-bar active" style="height:14px"></div>
+                <div class="spark-bar active" style="height:16px"></div>
+                <div class="spark-bar active" style="height:18px"></div>
+                <div class="spark-bar active" style="height:15px"></div>
+                <div class="spark-bar active" style="height:20px"></div>
+                <div class="spark-bar active" style="height:22px"></div>
+                <div class="spark-bar active" style="height:24px"></div>
+              </div>
+            </td>
+            <td><span class="badge badge-green">Scaling</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Brand Search — Exact Match</td>
+            <td><span class="badge badge-green">Google</span></td>
+            <td class="td-mono">$1,120</td>
+            <td class="td-mono">$8,960</td>
+            <td class="td-mono" style="font-weight:600;color:#2D7A4F;">8.00x</td>
+            <td class="td-mono">$6.22</td>
+            <td>
+              <div class="spark-bar-group">
+                <div class="spark-bar active" style="height:20px"></div>
+                <div class="spark-bar active" style="height:22px"></div>
+                <div class="spark-bar active" style="height:19px"></div>
+                <div class="spark-bar active" style="height:24px"></div>
+                <div class="spark-bar active" style="height:21px"></div>
+                <div class="spark-bar active" style="height:20px"></div>
+                <div class="spark-bar active" style="height:22px"></div>
+              </div>
+            </td>
+            <td><span class="badge badge-green">Stable</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Chill Bottle — Carousel Lifestyle</td>
+            <td><span class="badge badge-blue">Meta</span></td>
+            <td class="td-mono">$3,840</td>
+            <td class="td-mono">$14,976</td>
+            <td class="td-mono" style="font-weight:600;color:#2D7A4F;">3.90x</td>
+            <td class="td-mono">$16.00</td>
+            <td>
+              <div class="spark-bar-group">
+                <div class="spark-bar active" style="height:18px"></div>
+                <div class="spark-bar active" style="height:20px"></div>
+                <div class="spark-bar active" style="height:16px"></div>
+                <div class="spark-bar active" style="height:14px"></div>
+                <div class="spark-bar active" style="height:16px"></div>
+                <div class="spark-bar active" style="height:18px"></div>
+                <div class="spark-bar active" style="height:20px"></div>
+              </div>
+            </td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Non-Brand — Baby Bottles</td>
+            <td><span class="badge badge-green">Google</span></td>
+            <td class="td-mono">$2,840</td>
+            <td class="td-mono">$8,520</td>
+            <td class="td-mono" style="font-weight:600;">3.00x</td>
+            <td class="td-mono">$22.30</td>
+            <td>
+              <div class="spark-bar-group">
+                <div class="spark-bar active" style="height:16px"></div>
+                <div class="spark-bar active" style="height:14px"></div>
+                <div class="spark-bar warning" style="height:12px"></div>
+                <div class="spark-bar warning" style="height:10px"></div>
+                <div class="spark-bar active" style="height:14px"></div>
+                <div class="spark-bar active" style="height:16px"></div>
+                <div class="spark-bar active" style="height:15px"></div>
+              </div>
+            </td>
+            <td><span class="badge badge-yellow">Monitor</span></td>
+          </tr>
+          <tr>
+            <td style="font-weight:500;">Prospecting — Interest Stacking</td>
+            <td><span class="badge badge-blue">Meta</span></td>
+            <td class="td-mono">$5,200</td>
+            <td class="td-mono">$10,400</td>
+            <td class="td-mono" style="color:#D14343;">2.00x</td>
+            <td class="td-mono" style="color:#D14343;">$28.89</td>
+            <td>
+              <div class="spark-bar-group">
+                <div class="spark-bar" style="height:18px;background:#D14343;opacity:0.6"></div>
+                <div class="spark-bar" style="height:14px;background:#D14343;opacity:0.6"></div>
+                <div class="spark-bar" style="height:12px;background:#D14343;opacity:0.6"></div>
+                <div class="spark-bar" style="height:10px;background:#D14343;opacity:0.6"></div>
+                <div class="spark-bar" style="height:8px;background:#D14343;opacity:0.6"></div>
+                <div class="spark-bar" style="height:10px;background:#D14343;opacity:0.6"></div>
+                <div class="spark-bar" style="height:9px;background:#D14343;opacity:0.6"></div>
+              </div>
+            </td>
+            <td><span class="badge badge-red">Declining</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bottom row: Klaviyo + Shopify -->
+    <div class="bottom-grid">
+      <!-- Klaviyo Flows -->
+      <div class="table-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Klaviyo Flow Performance</div>
+            <div class="chart-subtitle">Last 30 days</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Flow</th>
+              <th>Sent</th>
+              <th>Open Rate</th>
+              <th>Click Rate</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:500;">Welcome Series</td>
+              <td class="td-mono">2,840</td>
+              <td class="td-mono" style="color:#2D7A4F;">48.2%</td>
+              <td class="td-mono">8.4%</td>
+              <td class="td-mono" style="font-weight:600;">$5,120</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;">Abandoned Cart</td>
+              <td class="td-mono">1,420</td>
+              <td class="td-mono" style="color:#2D7A4F;">52.1%</td>
+              <td class="td-mono" style="color:#2D7A4F;">12.8%</td>
+              <td class="td-mono" style="font-weight:600;">$4,280</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;">Post-Purchase</td>
+              <td class="td-mono">980</td>
+              <td class="td-mono">38.5%</td>
+              <td class="td-mono">5.2%</td>
+              <td class="td-mono" style="font-weight:600;">$1,840</td>
+            </tr>
+            <tr>
+              <td style="font-weight:500;">Browse Abandon</td>
+              <td class="td-mono">3,200</td>
+              <td class="td-mono">31.4%</td>
+              <td class="td-mono" style="color:#D14343;">2.1%</td>
+              <td class="td-mono">$1,240</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Shopify Summary -->
+      <div class="table-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Shopify Overview</div>
+            <div class="chart-subtitle">March 2026 MTD</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;">
+          <div style="padding:14px;background:#F8F8F6;border-radius:12px;">
+            <div style="font-size:12px;color:#888;margin-bottom:4px;">Orders</div>
+            <div style="font-size:24px;font-weight:700;">842</div>
+            <div class="metric-change up" style="margin-top:4px;">&#9650; 15.2%</div>
+          </div>
+          <div style="padding:14px;background:#F8F8F6;border-radius:12px;">
+            <div style="font-size:12px;color:#888;margin-bottom:4px;">Gross Revenue</div>
+            <div style="font-size:24px;font-weight:700;">$89,420</div>
+            <div class="metric-change up" style="margin-top:4px;">&#9650; 18.7%</div>
+          </div>
+          <div style="padding:14px;background:#F8F8F6;border-radius:12px;">
+            <div style="font-size:12px;color:#888;margin-bottom:4px;">AOV</div>
+            <div style="font-size:24px;font-weight:700;">$106.20</div>
+            <div class="metric-change up" style="margin-top:4px;">&#9650; $3.40</div>
+          </div>
+          <div style="padding:14px;background:#F8F8F6;border-radius:12px;">
+            <div style="font-size:12px;color:#888;margin-bottom:4px;">New vs Returning</div>
+            <div style="font-size:24px;font-weight:700;">62 / 38</div>
+            <div style="font-size:12px;color:#888;margin-top:4px;">% new · % return</div>
+          </div>
+          <div style="padding:14px;background:#F8F8F6;border-radius:12px;">
+            <div style="font-size:12px;color:#888;margin-bottom:4px;">Refund Rate</div>
+            <div style="font-size:24px;font-weight:700;">2.1%</div>
+            <div class="metric-change up" style="margin-top:4px;">&#9660; 0.4%</div>
+          </div>
+          <div style="padding:14px;background:#F8F8F6;border-radius:12px;">
+            <div style="font-size:12px;color:#888;margin-bottom:4px;">Conv. Rate</div>
+            <div style="font-size:24px;font-weight:700;">3.8%</div>
+            <div class="metric-change up" style="margin-top:4px;">&#9650; 0.3%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Sample data for charts
+    const days = Array.from({length: 23}, (_, i) => `Mar ${i + 1}`);
+
+    // Revenue vs Spend chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+      type: 'line',
+      data: {
+        labels: days,
+        datasets: [
+          {
+            label: 'Revenue',
+            data: [2800,3100,3400,2900,3600,4100,4400,3200,3800,4200,3900,4500,4100,3700,4800,4200,3900,4600,4100,3800,4300,4700,4900],
+            borderColor: '#2D7A4F',
+            backgroundColor: 'rgba(45,122,79,0.08)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2.5,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Spend',
+            data: [880,920,1050,860,1100,1200,1280,980,1120,1240,1150,1300,1210,1080,1380,1220,1150,1320,1200,1100,1260,1350,1400],
+            borderColor: '#4285F4',
+            backgroundColor: 'rgba(66,133,244,0.06)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            borderDash: [5, 3],
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: "'DM Sans'", size: 11 }, color: '#bbb', maxTicksLimit: 8 }
+          },
+          y: {
+            grid: { color: '#F0F0EE' },
+            ticks: {
+              font: { family: "'DM Mono'", size: 11 },
+              color: '#bbb',
+              callback: v => '$' + (v/1000).toFixed(0) + 'k'
+            }
+          }
+        },
+        interaction: { intersect: false, mode: 'index' },
+      }
+    });
+
+    // ROAS by platform
+    const roasCtx = document.getElementById('roasChart').getContext('2d');
+    new Chart(roasCtx, {
+      type: 'line',
+      data: {
+        labels: days,
+        datasets: [
+          {
+            label: 'Meta ROAS',
+            data: [3.2,3.4,3.1,3.5,3.3,3.6,3.8,3.2,3.5,3.4,3.7,3.5,3.6,3.4,3.8,3.5,3.9,3.6,3.4,3.7,3.5,3.8,4.0],
+            borderColor: '#4285F4',
+            backgroundColor: 'transparent',
+            tension: 0.4,
+            borderWidth: 2.5,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Google ROAS',
+            data: [2.8,3.0,3.2,2.9,3.1,3.4,3.0,3.3,3.5,3.2,3.6,3.3,3.1,3.4,3.2,3.5,3.3,3.6,3.8,3.4,3.7,3.5,3.8],
+            borderColor: '#34A853',
+            backgroundColor: 'transparent',
+            tension: 0.4,
+            borderWidth: 2.5,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Target',
+            data: Array(23).fill(3.0),
+            borderColor: 'rgba(0,0,0,0.12)',
+            backgroundColor: 'transparent',
+            borderWidth: 1.5,
+            borderDash: [6, 4],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: "'DM Sans'", size: 11 }, color: '#bbb', maxTicksLimit: 8 }
+          },
+          y: {
+            grid: { color: '#F0F0EE' },
+            ticks: {
+              font: { family: "'DM Mono'", size: 11 },
+              color: '#bbb',
+              callback: v => v.toFixed(1) + 'x'
+            },
+            min: 2.0,
+            max: 4.5
+          }
+        },
+        interaction: { intersect: false, mode: 'index' },
+      }
+    });
+
+    // Revenue donut
+    const donutCtx = document.getElementById('donutChart').getContext('2d');
+    new Chart(donutCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Meta Ads', 'Google Ads', 'Klaviyo'],
+        datasets: [{
+          data: [52100, 24800, 12480],
+          backgroundColor: ['#4285F4', '#34A853', '#8B5CF6'],
+          borderWidth: 0,
+          hoverOffset: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+          legend: { display: false },
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

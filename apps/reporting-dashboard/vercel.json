@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "src/app/api/generator/video/route.ts": { "maxDuration": 300 },
+    "src/app/api/generator/image/route.ts": { "maxDuration": 120 },
+    "src/app/api/generator/brief/route.ts": { "maxDuration": 60 }
+  }
+}

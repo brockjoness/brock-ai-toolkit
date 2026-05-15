@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "source": {
+    "path": "Final.mp4",
+    "hash": "PLACEHOLDER12",
+    "fps": 60,
+    "width": 2560,
+    "height": 1440,
+    "durationFrames": 21658
+  },
+  "outputFps": 30,
+  "hook": {
+    "text": "LET'S BUILD",
+    "durationFrames": 60
+  },
+  "scenes": [
+    {
+      "id": "s000",
+      "inFrame": 0,
+      "outFrame": 360,
+      "transition": "cut",
+      "transitionDurationFrames": 6,
+      "captions": { "enabled": true, "style": "highlight" },
+      "callouts": [],
+      "vignette": true,
+      "disableTextBehind": false,
+      "textBehind": {
+        "text": "BUILD",
+        "fontSize": 320,
+        "color": "#a66e4c",
+        "animation": "rise",
+        "position": "center"
+      },
+      "lowerThird": {
+        "atFrame": 30,
+        "durationFrames": 150,
+        "label": "Brock Jones",
+        "sub": "Building with Claude"
+      }
+    },
+    {
+      "id": "s001",
+      "inFrame": 360,
+      "outFrame": 720,
+      "transition": "zoom-punch",
+      "transitionDurationFrames": 6,
+      "captions": { "enabled": true, "style": "highlight" },
+      "callouts": [
+        {
+          "atFrame": 30,
+          "durationFrames": 90,
+          "text": "Key idea",
+          "anchor": { "x": 0.7, "y": 0.4 },
+          "offset": { "dx": 0, "dy": 0 }
+        }
+      ],
+      "vignette": true,
+      "disableTextBehind": false,
+      "textBehind": {
+        "text": "REMOTION",
+        "fontSize": 240,
+        "color": "#ffd166",
+        "animation": "slideX",
+        "position": "center"
+      }
+    }
+  ],
+  "outro": {
+    "text": "Subscribe →",
+    "subText": "YOUTUBE.COM/@BROCKMJONES",
+    "durationFrames": 90
+  }
+}

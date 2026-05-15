@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{REPORT_TYPE}} for {{CLIENT_NAME}} — {{AGENCY_NAME}}</title>
+
+    <!-- OG Meta Tags -->
+    <meta property="og:title" content="{{REPORT_TYPE}} — {{CLIENT_NAME}}">
+    <meta property="og:description" content="Prepared by {{AGENCY_NAME}} on {{REPORT_DATE}}">
+    <meta property="og:type" content="article">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --accent: {{ACCENT_COLOR}};
+            --accent-subtle: color-mix(in srgb, {{ACCENT_COLOR}} 12%, transparent);
+            --bg: #FFFFFF;
+            --bg-section: #FAFAFA;
+            --bg-card: #F5F5F7;
+            --text-primary: #1D1D1F;
+            --text-secondary: #6E6E73;
+            --text-muted: #86868B;
+            --border: #E5E5E7;
+            --border-light: #F0F0F2;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .report-header {
+            border-bottom: 3px solid var(--accent);
+            padding: 40px 0 32px;
+            margin-bottom: 0;
+            background: var(--bg);
+        }
+
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .header-logos {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .header-logos img {
+            max-height: 40px;
+            max-width: 160px;
+            object-fit: contain;
+        }
+
+        .agency-name-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .report-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .report-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .report-meta span {
+            display: inline-block;
+            margin-right: 24px;
+        }
+
+        /* Navigation */
+        .section-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0;
+        }
+
+        .section-nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .section-nav a {
+            display: block;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .section-nav a:hover,
+        .section-nav a.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Main Content */
+        .report-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px 60px;
+        }
+
+        /* Sections */
+        section {
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        li::marker {
+            color: var(--accent);
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: var(--bg-card);
+        }
+
+        th {
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background: var(--bg-section);
+        }
+
+        /* Highlight cards */
+        .highlight-card {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 16px 0;
+        }
+
+        .highlight-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .highlight-card p {
+            font-size: 14px;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+
+        /* Winner/Loser badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-winner {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .badge-loser {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .badge-middle {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+
+        /* Snapshot/metrics grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 16px 0 24px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-light);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        .report-footer {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px 32px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Print styles */
+        @media print {
+            .section-nav {
+                display: none;
+            }
+
+            body {
+                font-size: 12px;
+            }
+
+            .report-header {
+                border-bottom-width: 2px;
+            }
+
+            section {
+                page-break-inside: avoid;
+            }
+
+            .table-wrapper {
+                box-shadow: none;
+            }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .header-inner,
+            .report-content,
+            .section-nav-inner,
+            .report-footer {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .report-title {
+                font-size: 22px;
+            }
+
+            .report-meta span {
+                display: block;
+                margin-right: 0;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="report-header">
+        <div class="header-inner">
+            <div class="header-logos">
+                <div>
+                    {{AGENCY_LOGO_HTML}}
+                </div>
+                <div>
+                    {{CLIENT_LOGO_HTML}}
+                </div>
+            </div>
+            <h1 class="report-title" style="border: none; padding: 0; margin-bottom: 8px;">{{REPORT_TYPE}}</h1>
+            <div class="report-meta">
+                <span>Client: <strong>{{CLIENT_NAME}}</strong></span>
+                <span>Date: <strong>{{REPORT_DATE}}</strong></span>
+                <span>Prepared by: <strong>{{AGENCY_NAME}}</strong></span>
+            </div>
+            <div class="report-meta" style="margin-top: 4px;">
+                {{REPORT_SUBTITLE}}
+            </div>
+        </div>
+    </header>
+
+    <!-- Section Navigation -->
+    <nav class="section-nav">
+        <div class="section-nav-inner">
+            {{SECTION_NAV_LINKS}}
+        </div>
+    </nav>
+
+    <!-- Report Content -->
+    <main class="report-content">
+        {{REPORT_CONTENT}}
+    </main>
+
+    <!-- Footer -->
+    <footer class="report-footer">
+        <div>Prepared by {{AGENCY_NAME}}</div>
+        <div>{{REPORT_DATE}}</div>
+    </footer>
+
+    <!-- Smooth scroll for nav links -->
+    <script>
+        document.querySelectorAll('.section-nav a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                document.querySelectorAll('.section-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Highlight active section on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    document.querySelectorAll('.section-nav a').forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('section[id]').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+
+</html>

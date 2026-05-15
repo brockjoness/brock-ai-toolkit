@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12-Month Strategic Roadmap — {{CLIENT_NAME}} | {{AGENCY_NAME}}</title>
+    <meta property="og:title" content="12-Month Roadmap — {{CLIENT_NAME}}">
+    <meta property="og:description" content="Strategic roadmap prepared by {{AGENCY_NAME}}">
+    <meta property="og:image" content="/api/og">
+
+    {{BASE_STYLES}}
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-header">
+                <div class="client-logo">{{CLIENT_LOGO_HTML}}</div>
+                <div class="agency-logo">{{AGENCY_LOGO_HTML}}</div>
+            </div>
+            <div class="hero-content">
+                <p class="hero-subtitle">{{DATE}} // {{AGENCY_SLUG}} pre-onboarding</p>
+                <h1 class="hero-title">12-Month<br>Strategic Roadmap</h1>
+                <p class="hero-tagline">Prepared for {{CLIENT_NAME}}<span class="cursor"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Executive Summary -->
+    <section>
+        <div class="container">
+            <p class="section-label">EXECUTIVE SUMMARY</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p class="stat-label">Services</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">{{SERVICES}}</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Year 1 Target</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">{{YEAR_1_TARGET}}</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Company Type</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">{{COMPANY_TYPE}}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategic Pillars -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">STRATEGIC PILLARS</p>
+            <h2>Our Focus Areas</h2>
+            {{STRATEGIC_PILLARS_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Q1 -->
+    <section>
+        <div class="container">
+            <p class="section-label">Q1: {{Q1_THEME}}</p>
+            <h2>Months 1-3</h2>
+            {{Q1_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Q2 -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">Q2: {{Q2_THEME}}</p>
+            <h2>Months 4-6</h2>
+            {{Q2_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Q3 -->
+    <section>
+        <div class="container">
+            <p class="section-label">Q3: {{Q3_THEME}}</p>
+            <h2>Months 7-9</h2>
+            {{Q3_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Q4 -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">Q4: {{Q4_THEME}}</p>
+            <h2>Months 10-12</h2>
+            {{Q4_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Key Milestones -->
+    <section>
+        <div class="container">
+            <p class="section-label">KEY MILESTONES</p>
+            <h2>Year at a Glance</h2>
+            <div class="card">
+                {{MILESTONES_CONTENT}}
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Summary -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">INVESTMENT SUMMARY</p>
+            {{INVESTMENT_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Back to Hub -->
+    <section>
+        <div class="container" style="text-align: center;">
+            <a href="{{HUB_URL}}" class="cta-button">&larr; Back to Pre-Onboarding Hub</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">{{AGENCY_NAME}}</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; {{YEAR}} All rights reserved.</p>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM OPERATIONAL</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

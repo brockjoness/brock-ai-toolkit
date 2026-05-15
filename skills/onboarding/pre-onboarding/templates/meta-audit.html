@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Creative Audit — {{CLIENT_NAME}} | {{AGENCY_NAME}}</title>
+    <meta property="og:title" content="Meta Creative Audit — {{CLIENT_NAME}}">
+    <meta property="og:description" content="Pre-access creative audit prepared by {{AGENCY_NAME}}">
+    <meta property="og:image" content="/api/og">
+
+    {{BASE_STYLES}}
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-header">
+                <div class="client-logo">{{CLIENT_LOGO_HTML}}</div>
+                <div class="agency-logo">{{AGENCY_LOGO_HTML}}</div>
+            </div>
+            <div class="hero-content">
+                <p class="hero-subtitle">{{DATE}} // {{AGENCY_SLUG}} pre-onboarding</p>
+                <h1 class="hero-title">Meta Creative<br>Audit</h1>
+                <p class="hero-tagline">Prepared for {{CLIENT_NAME}}<span class="cursor"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Meta -->
+    <section>
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p class="stat-label">Active Ads Analyzed</p>
+                    <p class="stat-value">{{AD_COUNT}}</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Competitors Reviewed</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">{{COMPETITORS_REVIEWED}}</p>
+                </div>
+                <div class="stat-card">
+                    <p class="stat-label">Audit Type</p>
+                    <p class="stat-value" style="font-size: 1.5rem;">Pre-Access</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.5rem;">Public data only</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1: Executive Creative Brief -->
+    <section>
+        <div class="container">
+            <p class="section-label">EXECUTIVE CREATIVE BRIEF</p>
+            {{EXECUTIVE_BRIEF_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 2: Creative Analysis -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">CREATIVE ANALYSIS</p>
+            {{CREATIVE_ANALYSIS_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 3: Competitor Snapshot -->
+    <section>
+        <div class="container">
+            <p class="section-label">COMPETITOR SNAPSHOT</p>
+            {{COMPETITOR_SNAPSHOT_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 4: Website & Landing Page Review -->
+    <section style="background: var(--bg-card);">
+        <div class="container">
+            <p class="section-label">WEBSITE & LANDING PAGE REVIEW</p>
+            {{WEBSITE_REVIEW_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Section 5: Opportunities & Next Steps -->
+    <section>
+        <div class="container">
+            <p class="section-label">OPPORTUNITIES & NEXT STEPS</p>
+            {{OPPORTUNITIES_CONTENT}}
+        </div>
+    </section>
+
+    <!-- Back to Hub -->
+    <section>
+        <div class="container" style="text-align: center;">
+            <a href="{{HUB_URL}}" class="cta-button">&larr; Back to Pre-Onboarding Hub</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">{{AGENCY_NAME}}</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; {{YEAR}} All rights reserved.</p>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM OPERATIONAL</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

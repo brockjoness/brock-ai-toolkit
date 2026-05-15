@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080">
+    <title>{{CLIENT_NAME}} -- {{VARIANT_NAME}} (Feed 4:5)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="{{FONT_IMPORT}}" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 1080px;
+            height: 1350px;
+            overflow: hidden;
+            background: {{BG_COLOR}};
+            font-family: {{FONT_FAMILY}};
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .canvas {
+            position: relative;
+            width: 1080px;
+            height: 1350px;
+            overflow: hidden;
+        }
+
+        /* Image layer -- fills entire canvas */
+        .image-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .image-layer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: color-mix(in srgb, {{ACCENT_COLOR}} 15%, {{BG_COLOR}});
+            border: 2px dashed color-mix(in srgb, {{ACCENT_COLOR}} 30%, transparent);
+        }
+
+        .image-placeholder span {
+            font-size: 28px;
+            font-weight: 500;
+            color: color-mix(in srgb, {{TEXT_COLOR}} 50%, transparent);
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.4;
+            padding: 40px;
+        }
+
+        /* Content overlay -- positioned within safe zones */
+        /* Safe zones: top 150px, bottom 270px, sides 40px */
+        .content-overlay {
+            position: absolute;
+            top: 150px;
+            left: 40px;
+            right: 40px;
+            bottom: 270px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+        }
+
+        /* Gradient backdrop for text readability over images */
+        .content-backdrop {
+            position: absolute;
+            bottom: 270px;
+            left: 0;
+            right: 0;
+            height: 500px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Only show backdrop when there's a real image */
+        .has-image .content-backdrop {
+            display: block;
+        }
+
+        .no-image .content-backdrop {
+            display: none;
+        }
+
+        .headline {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .has-image .headline {
+            color: #FFFFFF;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .no-image .headline {
+            color: {{TEXT_COLOR}};
+        }
+
+        .body-copy {
+            font-size: 36px;
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 32px;
+            max-width: 800px;
+        }
+
+        .has-image .body-copy {
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .no-image .body-copy {
+            color: {{TEXT_COLOR_SECONDARY}};
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 48px;
+            background: {{ACCENT_COLOR}};
+            color: #FFFFFF;
+            font-family: {{FONT_FAMILY}};
+            font-size: 32px;
+            font-weight: 600;
+            border: none;
+            border-radius: {{BORDER_RADIUS}};
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        /* Brand watermark */
+        .brand-mark {
+            position: absolute;
+            top: 170px;
+            left: 80px;
+            z-index: 3;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .has-image .brand-mark {
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .no-image .brand-mark {
+            color: color-mix(in srgb, {{TEXT_COLOR}} 40%, transparent);
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas {{IMAGE_MODE}}">
+        <!-- Image Layer -->
+        <div class="image-layer">
+            {{IMAGE_HTML}}
+        </div>
+
+        <!-- Gradient backdrop for text readability -->
+        <div class="content-backdrop"></div>
+
+        <!-- Brand watermark -->
+        <div class="brand-mark">{{CLIENT_NAME}}</div>
+
+        <!-- Content -- positioned within safe zones -->
+        <div class="content-overlay">
+            <h1 class="headline">{{HEADLINE}}</h1>
+            <p class="body-copy">{{BODY_COPY}}</p>
+            <div class="cta-button">{{CTA_TEXT}}</div>
+        </div>
+    </div>
+</body>
+</html>

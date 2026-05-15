@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  /* Clickflow default theme */
+  --color-background: #FAFAF8;
+  --color-foreground: #1A1A18;
+  --color-accent: #2D7A4F;
+  --color-accent-foreground: #ffffff;
+  --color-card: #ffffff;
+  --color-card-border: #E8E8E6;
+  --color-sidebar: #1A1A18;
+  --color-sidebar-text: #ffffff;
+  --color-muted: #888888;
+  --color-muted-foreground: #555555;
+  --color-success: #2D7A4F;
+  --color-danger: #D14343;
+  --color-warning: #FBB005;
+  --color-info: #4285F4;
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'SFMono-Regular', monospace;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mono utility */
+.font-mono {
+  font-family: var(--font-mono);
+}

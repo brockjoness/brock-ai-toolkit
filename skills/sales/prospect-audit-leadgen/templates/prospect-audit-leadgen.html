@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{COMPANY_NAME}} - Lead Generation Audit | Clickflow</title>
+<meta name="description" content="Lead generation audit for {{COMPANY_NAME}} by Clickflow. Competitive landscape analysis, SEO insights, and actionable recommendations.">
+<meta property="og:title" content="{{COMPANY_NAME}} - Lead Generation Audit">
+<meta property="og:description" content="Lead generation audit by Clickflow">
+<meta property="og:image" content="/api/og">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+{{BASE_STYLES}}
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="gradient-ambient"><span></span></div>
+  <div class="hero-inner">
+    <div class="hero-badge">Personalized Audit</div>
+    <div class="hero-logo">{{COMPANY_LOGO}}</div>
+    <h1>Your Lead Generation Audit</h1>
+    <div class="hero-meta">{{DATE}} // clickflow.dev</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">{{COMPETITOR_COUNT}}</div>
+        <div class="hero-stat-label">Competitors Analyzed</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">{{OPPORTUNITY_COUNT}}</div>
+        <div class="hero-stat-label">Growth Opportunities</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">{{QUICK_WIN_COUNT}}</div>
+        <div class="hero-stat-label">Quick Wins</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET SNAPSHOT -->
+<section class="fade-in">
+  <div class="container">
+    <div class="section-label">Market Intelligence</div>
+    <h2 class="section-title">Market Snapshot</h2>
+    <p class="section-desc">What customers, competitors, and the market are saying about {{COMPANY_NAME}}.</p>
+    {{MARKET_SNAPSHOT_CONTENT}}
+  </div>
+</section>
+
+<!-- COMPETITIVE AD LANDSCAPE -->
+<section class="fade-in" style="background: var(--surface);">
+  <div class="container">
+    <div class="section-label">Competitive Intelligence</div>
+    <h2 class="section-title">Competitive Ad Landscape</h2>
+    <p class="section-desc">We analyzed advertising activity across your top competitors in Southern Florida. Here is where the opportunity exists.</p>
+    {{COMPETITIVE_AD_CONTENT}}
+  </div>
+</section>
+
+<!-- SOCIAL MEDIA AUDIT -->
+<section class="fade-in">
+  <div class="container">
+    <div class="section-label">Organic Presence</div>
+    <h2 class="section-title">Social Media Audit</h2>
+    <p class="section-desc">How {{COMPANY_NAME}}'s organic social presence supports lead generation efforts.</p>
+    {{SOCIAL_AUDIT_CONTENT}}
+  </div>
+</section>
+
+<!-- WEBSITE & LEAD CAPTURE REVIEW -->
+<section class="fade-in" style="background: var(--surface);">
+  <div class="container">
+    <div class="section-label">Lead Capture Analysis</div>
+    <h2 class="section-title">Website & Lead Capture Review</h2>
+    <p class="section-desc">How effectively your website converts visitors into qualified leads.</p>
+    {{LEAD_CAPTURE_CONTENT}}
+  </div>
+</section>
+
+<!-- SEO & LOCAL SEARCH -->
+<section class="fade-in">
+  <div class="container">
+    <div class="section-label">Search Presence</div>
+    <h2 class="section-title">SEO & Local Search Analysis</h2>
+    <p class="section-desc">How {{COMPANY_NAME}} shows up when homeowners search for roofing services in Southern Florida.</p>
+    {{SEO_CONTENT}}
+  </div>
+</section>
+
+<!-- QUICK WINS -->
+<section class="fade-in" style="background: var(--surface);">
+  <div class="container">
+    <div class="section-label">Immediate Opportunities</div>
+    <h2 class="section-title">Quick Wins</h2>
+    <p class="section-desc">Specific, actionable improvements that can start generating more leads this month.</p>
+    <div class="quick-wins">
+      {{QUICK_WINS_CONTENT}}
+    </div>
+  </div>
+</section>
+
+<!-- CREATIVE TESTING ROADMAP -->
+<section class="fade-in">
+  <div class="container">
+    <div class="section-label">What We Would Launch</div>
+    <h2 class="section-title">Creative Testing Roadmap</h2>
+    <p class="section-desc">3 specific campaigns we would launch in month one to start generating qualified leads.</p>
+    <div class="concepts-grid">
+      {{TESTING_ROADMAP_CONTENT}}
+    </div>
+    <div class="teaser">
+      <strong>These are 3 of the campaigns we would launch in month one.</strong> With our creative production pipeline, we produce and test new hooks, angles, and formats every week &mdash; optimizing toward the lowest cost per qualified appointment.
+    </div>
+  </div>
+</section>
+
+<!-- PRICING & PROPOSAL -->
+<section class="fade-in" style="background: var(--surface);">
+  <div class="container">
+    <div class="section-label">Partnership Model</div>
+    <h2 class="section-title">How We Work Together</h2>
+    <p class="section-desc">A transparent, performance-aligned pricing model built for lead generation.</p>
+    {{PRICING_CONTENT}}
+  </div>
+</section>
+
+<!-- WHAT A FULL ENGAGEMENT REVEALS -->
+<section class="cta-section fade-in">
+  <div class="gradient-ambient"><span></span></div>
+  <div style="position: relative; z-index: 2;">
+    <div class="section-label">Full Engagement</div>
+    <h2 class="section-title">What a Full Engagement Reveals</h2>
+    <p class="section-desc" style="margin: 0 auto 32px;">Everything above is based on publicly available data. With ad account access and CRM integration, we unlock a deeper level of performance tracking.</p>
+    <div style="max-width: 680px; margin: 0 auto; text-align: left;">
+      <ul class="full-access-list">
+        {{FULL_ACCESS_CONTENT}}
+      </ul>
+    </div>
+    <div style="margin-top: 40px;">
+      <a href="{{CALENDAR_LINK}}" class="btn-primary" style="font-size: 17px; padding: 16px 36px;">Book Your Strategy Call &rarr;</a>
+    </div>
+    <p style="font-size: 13px; color: var(--text-tertiary); margin-top: 16px;">30 minutes. No obligation. We'll walk through these findings live.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="gradient-ambient"><span></span></div>
+  <div style="position: relative; z-index: 2;">
+    <div class="footer-logo">clickflow<span class="dot">.dev</span></div>
+    <div class="footer-legal">&copy; {{YEAR}} Clickflow. All Rights Reserved.</div>
+    <div class="footer-status">All systems operational</div>
+  </div>
+</footer>
+
+<script>
+const fadeEls = document.querySelectorAll('.fade-in');
+fadeEls.forEach(el => el.classList.add('will-animate'));
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      entry.target.classList.remove('will-animate');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+fadeEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

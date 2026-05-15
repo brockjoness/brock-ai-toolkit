@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creative Hit Rate Calculator</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d0f31; --bg2: #16183a; --bg3: #1a1c3e;
+    --border: rgba(200,200,171,0.1); --border2: rgba(200,200,171,0.18);
+    --text: #e0e0ff; --muted: #c8c8ab;
+    --signal: #e1ec00; --signal-dim: rgba(225,236,0,0.12);
+    --amber: #f5a623; --amber-dim: rgba(245,166,35,0.12);
+    --red: #ff5e5e; --red-dim: rgba(255,94,94,0.12);
+    --blue: #4d9fff; --blue-dim: rgba(77,159,255,0.12);
+    --font: 'Space Grotesk', sans-serif; --mono: 'DM Mono', monospace; --body: 'Inter', sans-serif;
+  }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding: 40px 28px 64px; }
+
+  /* NAV */
+  .topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:40px; padding-bottom:20px; border-bottom:1px solid var(--border2); }
+  .ce-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .ce-name { font-family:var(--font);font-size:20px;font-weight:700;color:var(--signal);letter-spacing:-0.02em; }
+  .topbar-title { font-family:var(--font);font-size:10px;font-weight:600;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase; }
+
+  /* STEP INDICATOR */
+  .steps { display:flex; align-items:center; gap:8px; margin-bottom:36px; }
+  .step-pill { font-family:var(--font);font-size:10px;font-weight:600;letter-spacing:0.1em;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted);transition:all 0.2s; }
+  .step-pill.active { border-color:rgba(225,236,0,0.4);color:var(--signal);background:var(--signal-dim); }
+  .step-pill.done { border-color:var(--border2);color:var(--muted);background:var(--bg2); }
+  .step-sep { color:var(--border2);font-size:12px; }
+
+  /* FORM */
+  .form-screen, .report-screen { display:none; }
+  .form-screen.visible, .report-screen.visible { display:block; }
+
+  .form-title { font-family:var(--font);font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px; }
+  .form-title span { color:var(--signal); }
+  .form-sub { font-size:13px;color:var(--muted);margin-bottom:32px;line-height:1.5; }
+
+  .form-section-label { font-family:var(--font);font-size:10px;font-weight:600;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;margin-top:28px; }
+  .form-section-label:first-of-type { margin-top:0; }
+
+  .field-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+  .field-grid-3 { display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px; }
+
+  .field { display:flex;flex-direction:column;gap:6px; }
+  .field label { font-family:var(--font);font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.05em; }
+  .field input {
+    background:var(--bg2); border:1px solid var(--border2);
+    border-radius:0; padding:10px 12px;
+    font-family:var(--mono);font-size:13px;color:var(--text);
+    outline:none;transition:border-color 0.2s;
+    -moz-appearance:textfield;
+  }
+  .field input::-webkit-outer-spin-button,
+  .field input::-webkit-inner-spin-button { -webkit-appearance:none; }
+  .field input:focus { border-color:var(--signal); }
+  .field .hint { font-size:11px;color:var(--muted);line-height:1.4; }
+
+  .cta-row { margin-top:32px;display:flex;align-items:center;gap:12px; }
+  .btn-primary {
+    background:var(--signal);color:#1b1d00;
+    border:none;border-radius:0;padding:12px 24px;
+    font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:0.04em;
+    cursor:pointer;transition:background 0.15s;text-transform:uppercase;
+  }
+  .btn-primary:hover { background:var(--signal-dim);background:#c5cf00; }
+  .btn-ghost {
+    background:transparent;color:var(--muted);
+    border:1px solid var(--border2);border-radius:0;padding:12px 20px;
+    font-family:var(--font);font-size:13px;
+    cursor:pointer;transition:all 0.15s;
+  }
+  .btn-ghost:hover { color:var(--signal);border-color:rgba(225,236,0,0.4); }
+
+  /* REPORT */
+  .report-header { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid var(--border2); }
+  .report-tag { font-family:var(--font);font-size:10px;font-weight:600;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;margin-bottom:8px; }
+  .report-title { font-family:var(--font);font-size:24px;font-weight:700;letter-spacing:-0.02em; }
+  .report-title span { color:var(--signal); }
+  .report-meta { font-size:12px;color:var(--muted);margin-top:5px; }
+  .report-date { font-family:var(--mono);font-size:11px;color:var(--muted);padding:6px 12px;border:1px solid var(--border);white-space:nowrap; }
+
+  .section-label { font-family:var(--font);font-size:10px;font-weight:600;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;margin-top:32px; }
+
+  /* PIPELINE */
+  .pipeline { display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr;align-items:center;gap:0;margin-bottom:8px; }
+  .pipe-stage { background:var(--bg2);border:1px solid var(--border);padding:16px 14px; }
+  .pipe-stage.active { border-color:rgba(225,236,0,0.4); }
+  .pipe-dot { width:9px;height:9px;display:inline-block;margin-bottom:8px; }
+  .dot-gray { background:var(--muted); }
+  .dot-amber { background:var(--amber);box-shadow:0 0 5px rgba(245,166,35,0.5); }
+  .dot-signal { background:var(--signal);box-shadow:0 0 5px rgba(225,236,0,0.5); }
+  .pipe-name { font-family:var(--font);font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text);margin-bottom:10px; }
+  .pipe-stat { display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border); }
+  .pipe-stat:last-child { border-bottom:none; }
+  .pipe-stat strong { font-weight:500;font-family:var(--mono);font-size:11px; }
+  .pipe-arrow { display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px; }
+
+  /* METRICS GRID */
+  .metrics-grid { display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px; }
+  .metric-card { background:var(--bg2);border:1px solid var(--border);padding:16px 14px;transition:border-color 0.2s; }
+  .metric-card:hover { border-color:var(--border2); }
+  .metric-label { font-family:var(--font);font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text);margin-bottom:6px; }
+  .metric-num-row { display:flex;align-items:baseline;gap:5px;margin-bottom:4px; }
+  .metric-index { font-family:var(--mono);font-size:9px;color:var(--muted); }
+  .metric-value { font-family:var(--font);font-size:26px;font-weight:700;letter-spacing:-0.03em;line-height:1; }
+  .metric-unit { font-size:12px;color:var(--muted);font-weight:400; }
+  .metric-desc { font-size:11px;color:var(--muted);line-height:1.5; }
+  .metric-sub { display:inline-block;margin-top:6px;font-family:var(--mono);font-size:10px;padding:2px 7px; }
+  .sub-signal { background:var(--signal-dim);color:var(--signal); }
+  .sub-amber { background:var(--amber-dim);color:var(--amber); }
+  .sub-red { background:var(--red-dim);color:var(--red); }
+  .sub-blue { background:var(--blue-dim);color:var(--blue); }
+
+  .v-signal { color:var(--signal); }
+  .v-amber { color:var(--amber); }
+  .v-red { color:var(--red); }
+  .v-blue { color:var(--blue); }
+
+  /* CALLOUT */
+  .callout { border:1px solid rgba(245,166,35,0.3);background:linear-gradient(135deg,rgba(245,166,35,0.06),rgba(245,166,35,0.02));padding:20px;margin-bottom:8px; }
+  .callout-head { display:flex;align-items:center;gap:8px;margin-bottom:10px; }
+  .callout-icon { width:18px;height:18px;background:var(--amber-dim);border:1px solid var(--amber);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--amber);flex-shrink:0; }
+  .callout-title { font-family:var(--font);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber); }
+  .callout-body { font-size:13px;line-height:1.65;color:var(--text); }
+  .callout-body strong { color:var(--amber);font-weight:600; }
+
+  /* GAP */
+  .gap-row { display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px; }
+  .gap-card { background:var(--bg2);border:1px solid var(--border);padding:14px; }
+  .gap-label { font-size:11px;color:var(--muted);margin-bottom:5px;letter-spacing:0.03em; }
+  .gap-value { font-size:20px;font-weight:700;font-family:var(--mono);letter-spacing:-0.02em; }
+  .gap-note { font-size:11px;color:var(--muted);margin-top:3px; }
+  .coverage-bar-wrap { margin-top:8px;background:var(--bg3);height:5px;overflow:hidden;border:1px solid var(--border); }
+  .coverage-bar-fill { height:100%;background:var(--red); }
+
+  /* FORMAT */
+  .format-row { display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border); }
+  .format-row:last-child { border-bottom:none; }
+  .format-name { font-size:12px;color:var(--text);width:76px;flex-shrink:0; }
+  .format-bar-track { flex:1;height:5px;background:var(--bg3);overflow:hidden; }
+  .format-bar-fill { height:100%; }
+  .format-pct { font-family:var(--mono);font-size:12px;width:44px;text-align:right;flex-shrink:0; }
+
+  /* EMAIL GATE */
+  .email-gate { margin-top:28px;padding:20px;border:1px solid rgba(225,236,0,0.25);background:linear-gradient(135deg,rgba(225,236,0,0.04),rgba(225,236,0,0.01)); }
+  .email-gate .form-section-label { margin-top:0; }
+  .email-gate-sub { font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5; }
+  .email-gate .field-grid { gap:12px; }
+  .email-error { font-size:11px;color:var(--red);margin-top:8px;min-height:16px; }
+  .field input.input-error { border-color:var(--red); }
+  .btn-primary:disabled { opacity:0.5;cursor:not-allowed; }
+  .btn-primary .spinner { display:inline-block;width:12px;height:12px;border:2px solid rgba(27,29,0,0.3);border-top-color:#1b1d00;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:6px;vertical-align:middle; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* FOOTER */
+  .footer { display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid var(--border);margin-top:32px; }
+  .footer-brand { font-family:var(--font);font-size:11px;color:var(--muted); }
+  .footer-brand a { color:var(--signal);text-decoration:none; }
+  .footer-note { font-size:11px;color:var(--muted); }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .page { padding: 24px 16px 48px; }
+    .field-grid, .field-grid-3 { grid-template-columns: 1fr; }
+    .pipeline { grid-template-columns: 1fr; gap: 8px; }
+    .pipe-arrow { transform: rotate(90deg); justify-self: center; }
+    .metrics-grid, .gap-row { grid-template-columns: 1fr; }
+    .steps { flex-wrap: wrap; }
+    .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topbar">
+    <a class="ce-logo" href="#">
+      <div class="ce-name">Acme Agency</div>
+    </a>
+    <div class="topbar-title">Creative Hit Rate Framework</div>
+  </div>
+
+  <div class="steps">
+    <div class="step-pill active" id="pill-1">01 — Test stage</div>
+    <div class="step-sep">&rsaquo;</div>
+    <div class="step-pill" id="pill-2">02 — Scale stage</div>
+    <div class="step-sep">&rsaquo;</div>
+    <div class="step-pill" id="pill-3">03 — Format data</div>
+    <div class="step-sep">&rsaquo;</div>
+    <div class="step-pill" id="pill-4">04 — Report</div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-screen visible" id="form-screen">
+
+    <!-- STEP 1 -->
+    <div id="step-1">
+      <div class="form-title">Test Stage <span>Data</span></div>
+      <div class="form-sub">Enter your account's test-phase performance numbers. These reveal how efficiently your pipeline identifies winners.</div>
+
+      <div class="form-section-label">Volume & spend</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Total creatives launched (lifetime)</label>
+          <input type="number" id="f-test-creatives" placeholder="2200">
+          <div class="hint">All ads ever entered into test</div>
+        </div>
+        <div class="field">
+          <label>Total test spend ($)</label>
+          <input type="number" id="f-test-spend" placeholder="3400000">
+        </div>
+        <div class="field">
+          <label>Ads that hit (reached Test &rarr; Scale)</label>
+          <input type="number" id="f-hits" placeholder="286">
+          <div class="hint">Used to compute hit rate</div>
+        </div>
+        <div class="field">
+          <label>Monthly launch volume (avg)</label>
+          <input type="number" id="f-monthly-launches" placeholder="201">
+        </div>
+      </div>
+
+      <div class="form-section-label">Lifespan & churn</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Median test lifespan (days)</label>
+          <input type="number" id="f-test-lifespan" placeholder="9">
+        </div>
+        <div class="field">
+          <label>Ads that hit then churned</label>
+          <input type="number" id="f-churned" placeholder="63">
+          <div class="hint">Used to compute churn rate</div>
+        </div>
+        <div class="field">
+          <label>Median age at churn (days)</label>
+          <input type="number" id="f-churn-age" placeholder="13">
+        </div>
+        <div class="field">
+          <label>Hit rate in last 60 days (%)</label>
+          <input type="number" id="f-hit-rate-l60" placeholder="23">
+          <div class="hint">Optional — for trend callout</div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn-primary" onclick="goStep(2)">Next — Scale stage &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step-2" style="display:none">
+      <div class="form-title">Scale Stage <span>Data</span></div>
+      <div class="form-sub">Numbers from your active scaled campaigns. These reveal pipeline efficiency and the replenishment gap.</div>
+
+      <div class="form-section-label">Active scale</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Total ads in Test &rarr; Scale bucket</label>
+          <input type="number" id="f-ts-creatives" placeholder="800">
+        </div>
+        <div class="field">
+          <label>Test &rarr; Scale spend ($)</label>
+          <input type="number" id="f-ts-spend" placeholder="2600000">
+        </div>
+        <div class="field">
+          <label>Currently scaled active ads</label>
+          <input type="number" id="f-scaled-ads" placeholder="380">
+        </div>
+        <div class="field">
+          <label>Monthly scaled spend ($)</label>
+          <input type="number" id="f-scaled-spend" placeholder="5000000">
+        </div>
+      </div>
+
+      <div class="form-section-label">Replenishment</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Scale churn per month</label>
+          <input type="number" id="f-scale-churn" placeholder="230">
+          <div class="hint">Ads dying at scale each month</div>
+        </div>
+        <div class="field">
+          <label>Graduates per month (into scale)</label>
+          <input type="number" id="f-grads" placeholder="55">
+          <div class="hint">New ads entering scale each month</div>
+        </div>
+        <div class="field">
+          <label>Ads that ever graduated to scale</label>
+          <input type="number" id="f-grad-total" placeholder="499">
+          <div class="hint">Used for graduation rate</div>
+        </div>
+        <div class="field">
+          <label>Median scale lifespan (days)</label>
+          <input type="number" id="f-scale-lifespan" placeholder="48">
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn-ghost" onclick="goStep(1)">&larr; Back</button>
+        <button class="btn-primary" onclick="goStep(3)">Next — Format data &rarr;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step-3" style="display:none">
+      <div class="form-title">Format <span>Performance</span></div>
+      <div class="form-sub">Enter hit rate by creative format. Leave blank to omit from the report.</div>
+
+      <div class="form-section-label">Hit rate by format (%)</div>
+      <div class="field-grid-3">
+        <div class="field">
+          <label>Video</label>
+          <input type="number" id="f-fmt-video" placeholder="13.9">
+        </div>
+        <div class="field">
+          <label>Video-PE</label>
+          <input type="number" id="f-fmt-videope" placeholder="13.5">
+        </div>
+        <div class="field">
+          <label>Static</label>
+          <input type="number" id="f-fmt-static" placeholder="9.2">
+        </div>
+        <div class="field">
+          <label>GIF</label>
+          <input type="number" id="f-fmt-gif" placeholder="6.2">
+        </div>
+        <div class="field">
+          <label>Carousel</label>
+          <input type="number" id="f-fmt-carousel" placeholder="">
+        </div>
+        <div class="field">
+          <label>UGC / Other</label>
+          <input type="number" id="f-fmt-ugc" placeholder="">
+        </div>
+      </div>
+
+      <div class="form-section-label">Report metadata</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Account / client name</label>
+          <input type="text" id="f-account" placeholder="e.g. Example Brand" style="font-family:var(--body)">
+        </div>
+        <div class="field">
+          <label>Date range label</label>
+          <input type="text" id="f-daterange" placeholder="Jan 2025 - Mar 2026" style="font-family:var(--body)">
+        </div>
+      </div>
+
+      <div class="email-gate">
+        <div class="form-section-label">Get your report</div>
+        <div class="email-gate-sub">Enter your email to unlock your full creative hit rate report.</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" id="f-lead-name" placeholder="Your name" style="font-family:var(--body)">
+          </div>
+          <div class="field">
+            <label>Work email</label>
+            <input type="email" id="f-lead-email" placeholder="you@company.com" style="font-family:var(--body)">
+          </div>
+        </div>
+        <div class="email-error" id="email-error"></div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn-ghost" onclick="goStep(2)">&larr; Back</button>
+        <button class="btn-primary" id="generate-btn" onclick="handleGenerate()">Generate report &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT -->
+  <div class="report-screen" id="report-screen">
+    <div class="report-header">
+      <div class="report-header-left">
+        <div class="report-tag">Acme Agency — Creative Intelligence</div>
+        <div class="report-title">Creative <span>Hit Rate</span> Framework</div>
+        <div class="report-meta" id="r-meta"></div>
+      </div>
+      <div class="report-date" id="r-date"></div>
+    </div>
+
+    <div class="section-label">Test &rarr; Scale Pipeline</div>
+    <div class="pipeline">
+      <div class="pipe-stage">
+        <div class="pipe-dot dot-gray"></div>
+        <div class="pipe-name">Test only</div>
+        <div class="pipe-stat"><span>Creatives</span><strong id="r-test-creatives">&mdash;</strong></div>
+        <div class="pipe-stat"><span>Spend</span><strong id="r-test-spend">&mdash;</strong></div>
+        <div class="pipe-stat"><span>Hit rate</span><strong id="r-hit-rate" class="v-amber">&mdash;</strong></div>
+      </div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage">
+        <div class="pipe-dot dot-amber"></div>
+        <div class="pipe-name">Test &rarr; Scale</div>
+        <div class="pipe-stat"><span>Creatives</span><strong id="r-ts-creatives">&mdash;</strong></div>
+        <div class="pipe-stat"><span>Spend</span><strong id="r-ts-spend">&mdash;</strong></div>
+        <div class="pipe-stat"><span>Hit rate</span><strong id="r-ts-hit-rate" class="v-signal">&mdash;</strong></div>
+      </div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage active">
+        <div class="pipe-dot dot-signal"></div>
+        <div class="pipe-name">Scaled (active)</div>
+        <div class="pipe-stat"><span>Active ads</span><strong id="r-scaled-ads">&mdash;</strong></div>
+        <div class="pipe-stat"><span>Monthly spend</span><strong id="r-scaled-spend" class="v-signal">&mdash;</strong></div>
+        <div class="pipe-stat"><span>Churn / mo</span><strong id="r-scale-churn" class="v-amber">&mdash;</strong></div>
+      </div>
+    </div>
+
+    <div class="section-label">The six metrics</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Hit Rate</div>
+        <div class="metric-num-row"><span class="metric-index">01</span><span class="metric-value v-signal" id="r-m1">&mdash;</span></div>
+        <div class="metric-desc">% of launched ads that earned their way into Test &rarr; Scale.</div>
+        <div class="metric-sub sub-signal" id="r-m1-sub"></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Graduation Rate</div>
+        <div class="metric-num-row"><span class="metric-index">02</span><span class="metric-value v-signal" id="r-m2">&mdash;</span></div>
+        <div class="metric-desc">Of ads that hit, this % went on to fully scale. Your pipeline efficiency score.</div>
+        <div class="metric-sub sub-signal">of hits &rarr; scale</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Churn Rate</div>
+        <div class="metric-num-row"><span class="metric-index">03</span><span class="metric-value v-red" id="r-m3">&mdash;</span></div>
+        <div class="metric-desc">% of ever-hit ads that eventually stopped performing.</div>
+        <div class="metric-sub sub-amber" id="r-m3-sub"></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Avg Lifespan</div>
+        <div class="metric-num-row"><span class="metric-index">04</span><span class="metric-value v-blue" id="r-m4">&mdash;</span><span class="metric-unit">test</span></div>
+        <div class="metric-desc">Median creative lifespan in test vs. at scale. Know the difference.</div>
+        <div class="metric-sub sub-blue" id="r-m4-sub"></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Monthly Launches</div>
+        <div class="metric-num-row"><span class="metric-index">05</span><span class="metric-value" id="r-m5">&mdash;</span></div>
+        <div class="metric-desc">Creatives launched per month on average. The metric most agencies ignore.</div>
+        <div class="metric-sub sub-signal">avg / mo</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Avg Spend / Test</div>
+        <div class="metric-num-row"><span class="metric-index">06</span><span class="metric-value v-amber" id="r-m6">&mdash;</span></div>
+        <div class="metric-desc">Per creative test cost. At your launch volume, this is your monthly test budget.</div>
+        <div class="metric-sub sub-amber" id="r-m6-sub"></div>
+      </div>
+    </div>
+
+    <div class="section-label">The blind spot</div>
+    <div class="callout">
+      <div class="callout-head">
+        <div class="callout-icon">!</div>
+        <div class="callout-title">Volume is the lever</div>
+      </div>
+      <div class="callout-body" id="r-callout"></div>
+    </div>
+
+    <div class="section-label">Scale Replenishment Gap</div>
+    <div class="gap-row">
+      <div class="gap-card">
+        <div class="gap-label">Scale churn / mo</div>
+        <div class="gap-value v-red" id="r-g1">&mdash;</div>
+        <div class="gap-note">Ads dying at scale each month</div>
+      </div>
+      <div class="gap-card">
+        <div class="gap-label">Current grads / mo</div>
+        <div class="gap-value v-amber" id="r-g2">&mdash;</div>
+        <div class="gap-note">New ads entering scale</div>
+      </div>
+      <div class="gap-card">
+        <div class="gap-label">Coverage</div>
+        <div class="gap-value v-red" id="r-g3">&mdash;</div>
+        <div class="gap-note" id="r-g3-note">&mdash;</div>
+        <div class="coverage-bar-wrap"><div class="coverage-bar-fill" id="r-coverage-bar"></div></div>
+      </div>
+    </div>
+
+    <div class="section-label" id="fmt-section-label" style="display:none">Format performance — hit rate</div>
+    <div id="format-bars"></div>
+
+    <div class="footer">
+      <div class="footer-brand">Acme Agency</div>
+      <div class="footer-note" id="r-footer-note"></div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <button class="btn-ghost" onclick="resetForm()" style="font-size:12px;padding:8px 16px;">&larr; Edit data</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function goStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById('step-'+i).style.display = i===n ? 'block' : 'none';
+    const pill = document.getElementById('pill-'+i);
+    pill.classList.remove('active','done');
+    if(i < n) pill.classList.add('done');
+    else if(i === n) pill.classList.add('active');
+  });
+  document.getElementById('pill-4').classList.remove('active');
+}
+
+function fmt(n, decimals=1) {
+  if(n === null || isNaN(n)) return '\u2014';
+  return n.toFixed(decimals);
+}
+function fmtMoney(n) {
+  if(!n || isNaN(n)) return '\u2014';
+  if(n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M+';
+  if(n >= 1000) return '$' + Math.round(n/1000) + 'K';
+  return '$' + Math.round(n);
+}
+function fmtNum(n) {
+  if(!n || isNaN(n)) return '\u2014';
+  return n.toLocaleString();
+}
+function g(id) { return parseFloat(document.getElementById(id).value) || null; }
+function gs(id) { return document.getElementById(id).value.trim(); }
+
+async function handleGenerate() {
+  const email = document.getElementById('f-lead-email').value.trim();
+  const name = document.getElementById('f-lead-name').value.trim();
+  const errEl = document.getElementById('email-error');
+  const emailInput = document.getElementById('f-lead-email');
+  const btn = document.getElementById('generate-btn');
+
+  errEl.textContent = '';
+  emailInput.classList.remove('input-error');
+
+  if (!email) {
+    errEl.textContent = 'Email is required to generate your report.';
+    emailInput.classList.add('input-error');
+    emailInput.focus();
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = 'Please enter a valid email address.';
+    emailInput.classList.add('input-error');
+    emailInput.focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Generating...';
+
+  try {
+    await fetch('/api/capture', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email })
+    });
+  } catch (e) {
+    // Don't block report generation if capture fails
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Generate report \u2192';
+  generateReport();
+}
+
+function generateReport() {
+  const testCreatives = g('f-test-creatives');
+  const testSpend = g('f-test-spend');
+  const hits = g('f-hits');
+  const monthlyLaunches = g('f-monthly-launches');
+  const testLifespan = g('f-test-lifespan');
+  const churned = g('f-churned');
+  const churnAge = g('f-churn-age');
+  const hitRateL60 = g('f-hit-rate-l60');
+  const tsCreatives = g('f-ts-creatives');
+  const tsSpend = g('f-ts-spend');
+  const scaledAds = g('f-scaled-ads');
+  const scaledSpend = g('f-scaled-spend');
+  const scaleChurn = g('f-scale-churn');
+  const grads = g('f-grads');
+  const gradTotal = g('f-grad-total');
+  const scaleLifespan = g('f-scale-lifespan');
+  const account = gs('f-account');
+  const daterange = gs('f-daterange');
+
+  const hitRate = (testCreatives && hits) ? (hits / testCreatives * 100) : null;
+  const gradRate = (hits && gradTotal) ? (gradTotal / hits * 100) : null;
+  const churnRate = (hits && churned) ? (churned / hits * 100) : null;
+  const avgSpendPerTest = (testSpend && testCreatives) ? (testSpend / testCreatives) : null;
+  const monthlyTestBudget = (avgSpendPerTest && monthlyLaunches) ? avgSpendPerTest * monthlyLaunches : null;
+  const tsHitRate = (tsCreatives && hits) ? ((hits / tsCreatives) * 100) : null;
+  const coverage = (scaleChurn && grads) ? (grads / scaleChurn * 100) : null;
+  const coverageRatio = (scaleChurn && grads) ? Math.round(scaleChurn / grads) : null;
+
+  // Fill report
+  document.getElementById('r-meta').textContent = account || 'Meta Account';
+  document.getElementById('r-date').textContent = daterange || new Date().toLocaleDateString('en-US',{month:'short',year:'numeric'});
+
+  document.getElementById('r-test-creatives').textContent = testCreatives ? fmtNum(testCreatives)+'+' : '\u2014';
+  document.getElementById('r-test-spend').textContent = fmtMoney(testSpend);
+  const hrEl = document.getElementById('r-hit-rate');
+  hrEl.textContent = hitRate ? fmt(hitRate)+'%' : '\u2014';
+  hrEl.className = hitRate >= 15 ? 'v-signal' : hitRate >= 8 ? 'v-amber' : 'v-red';
+
+  document.getElementById('r-ts-creatives').textContent = tsCreatives ? fmtNum(tsCreatives)+'+' : '\u2014';
+  document.getElementById('r-ts-spend').textContent = fmtMoney(tsSpend);
+  document.getElementById('r-ts-hit-rate').textContent = tsHitRate ? fmt(tsHitRate)+'%' : '\u2014';
+
+  document.getElementById('r-scaled-ads').textContent = scaledAds ? fmtNum(scaledAds)+'+' : '\u2014';
+  document.getElementById('r-scaled-spend').textContent = fmtMoney(scaledSpend);
+  document.getElementById('r-scale-churn').textContent = scaleChurn ? '~'+fmtNum(scaleChurn) : '\u2014';
+
+  document.getElementById('r-m1').textContent = hitRate ? fmt(hitRate)+'%' : '\u2014';
+  const m1sub = document.getElementById('r-m1-sub');
+  if(hitRateL60) { m1sub.textContent = '\u2191 '+fmt(hitRateL60,0)+'% in L60'; m1sub.style.display='inline-block'; }
+  else m1sub.style.display='none';
+
+  document.getElementById('r-m2').textContent = gradRate ? fmt(gradRate)+'%' : '\u2014';
+  document.getElementById('r-m3').textContent = churnRate ? fmt(churnRate)+'%' : '\u2014';
+  const m3sub = document.getElementById('r-m3-sub');
+  m3sub.textContent = churnAge ? 'med. age at churn: '+churnAge+'d' : '';
+  m3sub.style.display = churnAge ? 'inline-block' : 'none';
+
+  document.getElementById('r-m4').textContent = testLifespan ? testLifespan+'d' : '\u2014';
+  const m4sub = document.getElementById('r-m4-sub');
+  m4sub.textContent = scaleLifespan ? scaleLifespan+'d at scale' : '';
+  m4sub.style.display = scaleLifespan ? 'inline-block' : 'none';
+
+  document.getElementById('r-m5').textContent = monthlyLaunches ? fmtNum(monthlyLaunches) : '\u2014';
+  document.getElementById('r-m6').textContent = avgSpendPerTest ? '$'+Math.round(avgSpendPerTest/100)*100 : '\u2014';
+  const m6sub = document.getElementById('r-m6-sub');
+  m6sub.textContent = monthlyTestBudget ? '~'+fmtMoney(monthlyTestBudget)+'/mo total' : '';
+  m6sub.style.display = monthlyTestBudget ? 'inline-block' : 'none';
+
+  // Callout
+  const calloutParts = [];
+  if(monthlyLaunches && hitRate) {
+    calloutParts.push(`At <strong>${fmtNum(monthlyLaunches)} launches/mo</strong> and a <strong>${fmt(hitRate)}% hit rate</strong>, this account produces roughly <strong>${Math.round(monthlyLaunches * hitRate/100)} new scale candidates per month</strong>.`);
+  }
+  if(scaleChurn && grads && coverageRatio) {
+    calloutParts.push(`Scale is churning <strong>${coverageRatio}\u00d7 faster</strong> than it's being replenished. Volume is the lever \u2014 not creative quality.`);
+  } else {
+    calloutParts.push(`AI creative analyzers diagnose individual ads. They're blind to the macro picture \u2014 volume, velocity, churn, hit rate, pipeline health. <strong>Scaling Meta isn't about finding your best creative. It's about running a system that finds winners fast enough to replace the ones dying.</strong>`);
+  }
+  document.getElementById('r-callout').innerHTML = calloutParts.join('<br><br>');
+
+  // Gap
+  document.getElementById('r-g1').textContent = scaleChurn ? '~'+fmtNum(scaleChurn) : '\u2014';
+  document.getElementById('r-g2').textContent = grads ? '~'+fmtNum(grads) : '\u2014';
+  document.getElementById('r-g3').textContent = coverage ? fmt(coverage,0)+'%' : '\u2014';
+  document.getElementById('r-g3-note').textContent = coverageRatio
+    ? `Scale is churning ${coverageRatio}\u00d7 faster than it's being replenished`
+    : '\u2014';
+  if(coverage) document.getElementById('r-coverage-bar').style.width = Math.min(coverage,100)+'%';
+
+  // Formats
+  const formats = [
+    { id:'f-fmt-video', label:'Video', color:'var(--signal)' },
+    { id:'f-fmt-videope', label:'Video-PE', color:'var(--signal)' },
+    { id:'f-fmt-static', label:'Static', color:'var(--amber)' },
+    { id:'f-fmt-gif', label:'GIF', color:'var(--red)' },
+    { id:'f-fmt-carousel', label:'Carousel', color:'var(--blue)' },
+    { id:'f-fmt-ugc', label:'UGC / Other', color:'var(--muted)' },
+  ].map(f => ({...f, val: g(f.id)})).filter(f => f.val !== null);
+
+  const fmtContainer = document.getElementById('format-bars');
+  fmtContainer.innerHTML = '';
+  document.getElementById('fmt-section-label').style.display = formats.length ? 'block' : 'none';
+  if(formats.length) {
+    const maxVal = Math.max(...formats.map(f=>f.val));
+    formats.forEach(f => {
+      const row = document.createElement('div');
+      row.className = 'format-row';
+      row.innerHTML = `<span class="format-name">${f.label}</span>
+        <div class="format-bar-track"><div class="format-bar-fill" style="width:${(f.val/maxVal*100).toFixed(0)}%;background:${f.color}"></div></div>
+        <span class="format-pct" style="color:${f.color}">${fmt(f.val)}%</span>`;
+      fmtContainer.appendChild(row);
+    });
+  }
+
+  document.getElementById('r-footer-note').textContent = daterange || '';
+
+  // Switch to report
+  document.getElementById('form-screen').classList.remove('visible');
+  document.getElementById('report-screen').classList.add('visible');
+  [1,2,3].forEach(i => {
+    const pill = document.getElementById('pill-'+i);
+    pill.classList.remove('active');
+    pill.classList.add('done');
+  });
+  document.getElementById('pill-4').classList.add('active');
+}
+
+function resetForm() {
+  document.getElementById('report-screen').classList.remove('visible');
+  document.getElementById('form-screen').classList.add('visible');
+  goStep(1);
+}
+</script>
+
+</body>
+</html>

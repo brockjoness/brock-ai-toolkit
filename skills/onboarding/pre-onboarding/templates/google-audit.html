@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Ads Audit — {{CLIENT_NAME}} | {{AGENCY_NAME}}</title>
+    <meta property="og:title" content="Google Ads Audit — {{CLIENT_NAME}}">
+    <meta property="og:description" content="Google Ads audit prepared by {{AGENCY_NAME}}">
+    <meta property="og:image" content="/api/og">
+
+    {{BASE_STYLES}}
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-header">
+                <div class="client-logo">{{CLIENT_LOGO_HTML}}</div>
+                <div class="agency-logo">{{AGENCY_LOGO_HTML}}</div>
+            </div>
+            <div class="hero-content">
+                <p class="hero-subtitle">{{DATE}} // {{AGENCY_SLUG}} pre-onboarding</p>
+                <h1 class="hero-title">Google Ads<br>Audit</h1>
+                <p class="hero-tagline">Prepared for {{CLIENT_NAME}}<span class="cursor"></span></p>
+            </div>
+        </div>
+    </section>
+
+    {{GOOGLE_AUDIT_BODY}}
+
+    <!-- Back to Hub -->
+    <section>
+        <div class="container" style="text-align: center;">
+            <a href="{{HUB_URL}}" class="cta-button">&larr; Back to Pre-Onboarding Hub</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">{{AGENCY_NAME}}</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; {{YEAR}} All rights reserved.</p>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM OPERATIONAL</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

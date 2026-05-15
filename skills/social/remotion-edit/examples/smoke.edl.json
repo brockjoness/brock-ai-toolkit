@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "source": {
+    "path": "smoke.mp4",
+    "hash": "df0795ab2141",
+    "fps": 60,
+    "width": 2560,
+    "height": 1440,
+    "durationFrames": 300
+  },
+  "outputFps": 30,
+  "scenes": [
+    {
+      "id": "s000",
+      "inFrame": 0,
+      "outFrame": 300,
+      "transition": "cut",
+      "transitionDurationFrames": 6,
+      "captions": {
+        "enabled": true,
+        "style": "highlight",
+        "size": "medium",
+        "position": "bottom",
+        "maxVisibleWords": 7
+      },
+      "callouts": [
+        {
+          "atFrame": 30,
+          "durationFrames": 90,
+          "text": "alpha works",
+          "anchor": { "x": 0.78, "y": 0.35 },
+          "offset": { "dx": 0, "dy": 0 }
+        }
+      ],
+      "vignette": true,
+      "disableTextBehind": false,
+      "textBehind": {
+        "text": "PROPOSAL",
+        "fontSize": 320,
+        "color": "#FFFFFF",
+        "animation": "rise",
+        "position": "center"
+      },
+      "lowerThird": {
+        "atFrame": 20,
+        "durationFrames": 120,
+        "label": "Brock Jones",
+        "sub": "Smoke test"
+      }
+    }
+  ]
+}

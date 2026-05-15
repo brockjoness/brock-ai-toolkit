@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Onboarding Hub — {{CLIENT_NAME}} | {{AGENCY_NAME}}</title>
+    <meta property="og:title" content="Pre-Onboarding — {{CLIENT_NAME}}">
+    <meta property="og:description" content="Your pre-onboarding package from {{AGENCY_NAME}}">
+    <meta property="og:image" content="/api/og">
+
+    {{BASE_STYLES}}
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero" style="min-height: 50vh;">
+        <div class="container">
+            <div class="hero-header">
+                <div class="client-logo">{{CLIENT_LOGO_HTML}}</div>
+                <div class="agency-logo">{{AGENCY_LOGO_HTML}}</div>
+            </div>
+            <div class="hero-content">
+                <p class="hero-subtitle">{{DATE}} // {{AGENCY_SLUG}} pre-onboarding</p>
+                <h1 class="hero-title">Pre-Onboarding Hub</h1>
+                <p class="hero-tagline">{{CLIENT_NAME}}<span class="cursor"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's Included -->
+    <section>
+        <div class="container">
+            <p class="section-label">WHAT'S INCLUDED</p>
+            <div class="card accent-border">
+                <p>Welcome to your pre-onboarding package. Below you'll find everything we've prepared ahead of our engagement -- competitive intelligence, creative analysis, and a strategic roadmap for the year ahead.</p>
+                <p>Each deliverable is a standalone analysis you can reference at any time. Click through to explore.</p>
+                <ul class="content-list">
+                    <li><strong>Proposal</strong> -- Our partnership overview, scope of services, and investment summary.</li>
+                    <li><strong>Competitor Research</strong> -- Reddit sentiment, customer pain points, competitive landscape, and actionable messaging angles.</li>
+                    <li><strong>Meta Creative Audit</strong> -- Ad Library analysis, creative patterns, website review, and a testing roadmap.</li>
+                    <li><strong>Google Ads Audit</strong> -- Search and Shopping campaign analysis, keyword strategy, and optimization opportunities.</li>
+                    <li><strong>12-Month Roadmap</strong> -- Quarter-by-quarter strategic plan with monthly milestones and KPI targets.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deliverables Grid -->
+    <section>
+        <div class="container">
+            <p class="section-label">YOUR DELIVERABLES</p>
+            <h2>What We've Prepared</h2>
+            <div class="two-col">
+                <a href="{{PROPOSAL_URL}}" class="hub-card card">
+                    <span class="status-badge complete">Complete</span>
+                    <h3>Proposal</h3>
+                    <p style="margin-bottom: 0;">Partnership overview, scope of services, and investment summary.</p>
+                </a>
+
+                <a href="{{COMPETITOR_RESEARCH_URL}}" class="hub-card card">
+                    <span class="status-badge complete">Complete</span>
+                    <h3>Competitor & Market Research</h3>
+                    <p style="margin-bottom: 0;">Reddit sentiment, customer pain points, competitive landscape, and actionable messaging angles.</p>
+                </a>
+
+                <a href="{{META_AUDIT_URL}}" class="hub-card card">
+                    <span class="status-badge {{META_STATUS}}">{{META_STATUS_LABEL}}</span>
+                    <h3>Meta Creative Audit</h3>
+                    <p style="margin-bottom: 0;">Ad Library analysis, creative patterns, website review, and a testing roadmap.</p>
+                </a>
+
+                <a href="{{GOOGLE_AUDIT_URL}}" class="hub-card card">
+                    <span class="status-badge {{GOOGLE_STATUS}}">{{GOOGLE_STATUS_LABEL}}</span>
+                    <h3>Google Ads Audit</h3>
+                    <p style="margin-bottom: 0;">Search and Shopping campaign analysis, keyword strategy, and optimization opportunities.</p>
+                </a>
+
+                <a href="{{ROADMAP_URL}}" class="hub-card card">
+                    <span class="status-badge complete">Complete</span>
+                    <h3>12-Month Strategic Roadmap</h3>
+                    <p style="margin-bottom: 0;">Quarter-by-quarter plan with monthly milestones, KPI targets, and key activities.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">{{AGENCY_NAME}}</p>
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">&copy; {{YEAR}} All rights reserved.</p>
+                </div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>SYSTEM OPERATIONAL</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

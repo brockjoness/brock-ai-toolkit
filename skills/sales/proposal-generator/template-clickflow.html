@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal for {{CLIENT_NAME}} — {{AGENCY_NAME}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #FAFAF8;
+            --bg-elevated: #FFFFFF;
+            --surface: #F2F2EE;
+            --text: #111110;
+            --text-secondary: #6B6B60;
+            --text-tertiary: #9B9B90;
+            --accent: #1A1A18;
+            --accent-hover: #2A2A28;
+            --border: #E8E8E2;
+            --border-strong: #D0D0C8;
+            --green: #2D7A4F;
+            --green-bg: #E8F5EE;
+            --radius: 12px;
+            --radius-lg: 20px;
+
+            /* Workflow compatibility */
+            --accent-theme: {{ACCENT_COLOR}};
+            --accent-subtle: {{ACCENT_SUBTLE}};
+            --font-heading: {{FONT_HEADING}};
+            --font-body: {{FONT_BODY}};
+            --font-code: {{FONT_CODE}};
+        }
+
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body { font-family: 'DM Sans', -apple-system, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; overflow-x: hidden; }
+        .mono { font-family: 'DM Mono', monospace; }
+        .serif { font-family: 'Newsreader', serif; }
+        a { color: inherit; }
+
+        /* ANIMATED GRADIENT SYSTEM */
+        @keyframes gradientDrift {
+            0% { transform: translate(0%, 0%) scale(1); }
+            20% { transform: translate(25%, -18%) scale(1.2); }
+            40% { transform: translate(-10%, 20%) scale(0.9); }
+            60% { transform: translate(20%, 10%) scale(1.15); }
+            80% { transform: translate(-15%, -12%) scale(1.05); }
+            100% { transform: translate(0%, 0%) scale(1); }
+        }
+        @keyframes gradientDrift2 {
+            0% { transform: translate(0%, 0%) scale(1); }
+            20% { transform: translate(-20%, 15%) scale(1.15); }
+            40% { transform: translate(15%, -20%) scale(0.85); }
+            60% { transform: translate(-10%, -15%) scale(1.2); }
+            80% { transform: translate(18%, 10%) scale(1.05); }
+            100% { transform: translate(0%, 0%) scale(1); }
+        }
+
+        .gradient-ambient {
+            position: absolute;
+            inset: -100px;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .gradient-ambient::before {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            width: 65%;
+            height: 70%;
+            top: -15%;
+            left: -10%;
+            background: rgba(66, 133, 244, 0.18);
+            animation: gradientDrift 20s ease-in-out infinite;
+        }
+        .gradient-ambient span {
+            display: block;
+            position: absolute;
+            width: 60%;
+            height: 65%;
+            bottom: -10%;
+            right: -10%;
+            border-radius: 50%;
+            background: rgba(251, 188, 5, 0.14);
+            filter: blur(70px);
+            animation: gradientDrift2 25s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* HERO */
+        .hero { position: relative; overflow: hidden; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 100px 24px; }
+        .hero .gradient-ambient { inset: -120px; }
+        .hero-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            margin-bottom: 4rem;
+        }
+        .client-logo img, .agency-logo img { max-height: 50px; max-width: 200px; }
+        .client-logo-text, .agency-logo-text {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--green-bg);
+            color: var(--green);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s 0.2s forwards;
+        }
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .hero-date {
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s 0.3s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(40px, 6vw, 76px);
+            font-weight: 600;
+            line-height: 1.05;
+            letter-spacing: -0.035em;
+            max-width: 900px;
+            margin-bottom: 28px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.7s 0.35s forwards;
+        }
+
+        .hero-tagline {
+            font-family: 'Newsreader', serif;
+            font-style: italic;
+            font-size: clamp(20px, 2.5vw, 28px);
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.7s 0.5s forwards;
+        }
+
+        /* SECTIONS */
+        section { padding: 120px 0; }
+
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        h2, .section-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 17px;
+            line-height: 1.65;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-desc {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 540px;
+            line-height: 1.65;
+        }
+
+        /* CARD (simple bordered) */
+        .card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 48px 40px;
+        }
+        .card.accent-border {
+            border-left: 3px solid var(--accent);
+        }
+
+        /* 2px-GAP GRID SYSTEM */
+        .grid-cards {
+            display: grid;
+            gap: 2px;
+            background: var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .grid-cards > * {
+            background: var(--bg-elevated);
+            padding: 48px 40px;
+        }
+
+        /* STATS */
+        .stats-row {
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin: 48px 0;
+        }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--text);
+        }
+        .stat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+
+        /* SERVICES GRID (2x2 "What We Do") */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            margin-top: 48px;
+            background: var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .service-card {
+            background: var(--bg-elevated);
+            padding: 48px 40px;
+        }
+        .service-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+        .service-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* STEPS GRID (Timeline) */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            margin-top: 48px;
+            background: var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+        }
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(66, 133, 244, 0.15), rgba(251, 188, 5, 0.15), rgba(66, 133, 244, 0.12), transparent);
+            z-index: 1;
+        }
+        .steps-grid-bottom {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            margin-top: 2px;
+            background: var(--border);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            overflow: hidden;
+        }
+        .step {
+            background: var(--bg-elevated);
+            padding: 48px 40px;
+        }
+        .step-number {
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+        }
+        .step h3 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+        .step-time {
+            display: inline-block;
+            margin-top: 16px;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--green);
+            background: var(--green-bg);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        .step-items {
+            list-style: none;
+            padding: 0;
+        }
+        .step-items li {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            padding-left: 24px;
+            position: relative;
+        }
+        .step-items li::before {
+            content: '\2713';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* WHY US / FEATURE SECTIONS */
+        .why-us-section {
+            background: var(--surface);
+            padding: 120px 0;
+        }
+        .feature-card {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-bottom: 24px;
+        }
+        .feature-card h3 {
+            color: var(--text);
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+        .feature-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        /* COMMUNICATION CADENCE */
+        .cadence-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            margin-top: 48px;
+            background: var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .cadence-item {
+            background: var(--bg-elevated);
+            padding: 48px 40px;
+        }
+        .cadence-frequency {
+            display: inline-block;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--green);
+            background: var(--green-bg);
+            padding: 4px 10px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+        .cadence-item h4 {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .cadence-item p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* PRICING */
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .pricing-header h2,
+        .pricing-header .section-title {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .pricing-header .section-desc {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            background: var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .pricing-card {
+            background: var(--bg-elevated);
+            padding: 48px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+        .pricing-card.featured {
+            background: var(--accent);
+            color: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+        .pricing-card.featured::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4285F4, #6BA3F7, #FBBC05, #4285F4);
+            opacity: 0.6;
+        }
+        .pricing-card.featured .pricing-label,
+        .pricing-card.featured .pricing-features li { color: rgba(250,250,248,0.7); }
+        .pricing-card.featured .pricing-price-sub { color: rgba(250,250,248,0.5); }
+        .pricing-tier {
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+        .pricing-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .pricing-price {
+            font-size: 42px;
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .pricing-price-sub {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 32px;
+        }
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 36px;
+            flex-grow: 1;
+        }
+        .pricing-features li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pricing-card.featured .pricing-features li {
+            border-bottom-color: rgba(250,250,248,0.12);
+        }
+        .pricing-features li::before {
+            content: '\2713';
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .pricing-btn {
+            display: block;
+            text-align: center;
+            padding: 14px 24px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid var(--border-strong);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            background: transparent;
+            color: var(--text);
+            font-family: inherit;
+            width: 100%;
+            text-decoration: none;
+        }
+        .pricing-btn:hover {
+            border-color: var(--text);
+            transform: translateY(-1px);
+        }
+        .pricing-card.featured .pricing-btn {
+            background: var(--bg);
+            color: var(--accent);
+            border-color: transparent;
+        }
+        .pricing-card.featured .pricing-btn:hover {
+            background: var(--surface);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .pricing-note {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        /* GETTING STARTED */
+        .getting-started-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            margin-top: 48px;
+            background: var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .getting-started-col {
+            background: var(--bg-elevated);
+            padding: 48px 40px;
+        }
+        .getting-started-col h3 {
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 12px;
+            padding-left: 28px;
+            position: relative;
+            line-height: 1.5;
+        }
+        .checklist li::before {
+            content: '\2713';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* CTA BUTTON */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: var(--accent);
+            color: var(--bg);
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.3), rgba(100, 160, 255, 0.2), rgba(251, 188, 5, 0.25));
+            opacity: 0;
+            transition: opacity 0.35s;
+            z-index: -1;
+            filter: blur(12px);
+        }
+        .btn-primary:hover::before { opacity: 1; }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+        }
+
+        /* TESTIMONIALS */
+        .testimonials-section {
+            background: var(--accent);
+            color: var(--bg);
+            border-radius: var(--radius-lg);
+            margin: 0 24px;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .testimonials-section .gradient-ambient::before {
+            background: rgba(66, 133, 244, 0.22);
+            animation-duration: 18s;
+        }
+        .testimonials-section .gradient-ambient span {
+            background: rgba(251, 188, 5, 0.16);
+            animation-duration: 24s;
+        }
+        .testimonials-section .section-label {
+            color: rgba(250,250,248,0.4);
+        }
+        .testimonials-section h2 {
+            color: var(--bg);
+        }
+        .testimonials-section .section-desc {
+            color: rgba(250,250,248,0.6);
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 48px;
+        }
+        .testimonial {
+            background: rgba(250,250,248,0.06);
+            border: 1px solid rgba(250,250,248,0.1);
+            border-radius: 16px;
+            padding: 36px;
+        }
+        .testimonial-text {
+            font-size: 15px;
+            line-height: 1.65;
+            color: rgba(250,250,248,0.85);
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .testimonial-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(250,250,248,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: rgba(250,250,248,0.6);
+            flex-shrink: 0;
+        }
+        .testimonial-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .testimonial-role {
+            font-size: 13px;
+            color: rgba(250,250,248,0.4);
+        }
+
+        .results-image-row {
+            margin: 20px 0;
+        }
+        .results-image-row img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 16px;
+            border: 1px solid rgba(250,250,248,0.1);
+        }
+
+        /* IMAGE CONTAINERS */
+        .image-container {
+            margin: 3rem 0;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* FOUNDER SECTION */
+        .founder-section {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            margin: 0 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .founder-section .gradient-ambient { inset: -60px; }
+        .founder-section .gradient-ambient::before {
+            bottom: -15%;
+            right: -10%;
+            top: auto;
+            left: auto;
+            animation-duration: 22s;
+        }
+        .founder-section .gradient-ambient span {
+            top: -10%;
+            left: -5%;
+            bottom: auto;
+            right: auto;
+            animation-duration: 28s;
+        }
+        .founder-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 80px 48px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .founder-inner .section-label {
+            margin-bottom: 24px;
+        }
+        .founder-quote {
+            font-family: 'Newsreader', serif;
+            font-size: clamp(20px, 2.5vw, 26px);
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 32px;
+        }
+        .founder-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+        .founder-bio {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .founder-bio a {
+            color: var(--text);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .founder-bio p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        /* MEGA FOOTER */
+        .mega-footer {
+            background: var(--accent);
+            border-radius: 24px 24px 0 0;
+            padding: 80px 24px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .mega-footer .gradient-ambient { inset: -80px; }
+        .mega-footer .gradient-ambient::before {
+            background: rgba(66, 133, 244, 0.22);
+            animation-duration: 18s;
+        }
+        .mega-footer .gradient-ambient span {
+            background: rgba(251, 188, 5, 0.16);
+            animation-duration: 24s;
+        }
+        .mega-footer-logo {
+            font-size: clamp(72px, 14vw, 180px);
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            color: rgba(250, 250, 248, 0.06);
+            line-height: 1;
+            margin-bottom: 48px;
+            user-select: none;
+            position: relative;
+            z-index: 2;
+        }
+        .mega-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .mega-footer-left {
+            font-size: 14px;
+            color: rgba(250,250,248,0.3);
+        }
+        .mega-footer-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--green);
+        }
+        .mega-footer-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            section { padding: 80px 0; }
+            .services-grid,
+            .steps-grid,
+            .steps-grid-bottom,
+            .cadence-grid,
+            .pricing-grid,
+            .getting-started-grid { grid-template-columns: 1fr; }
+            .testimonials-section { margin: 0 16px; padding: 64px 0; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .founder-section { margin: 0 16px; }
+            .founder-inner { padding: 56px 24px; }
+            .step, .service-card, .pricing-card, .cadence-item, .getting-started-col { padding: 32px 24px; }
+            .mega-footer-inner { flex-direction: column; align-items: flex-start; }
+            .stats-row { gap: 32px; }
+            .hero-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding: 120px 20px 80px; }
+            .stats-row { flex-direction: column; gap: 24px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="gradient-ambient"><span></span></div>
+        <div class="hero-inner">
+            <div class="hero-header">
+                <div class="client-logo">
+                    {{CLIENT_LOGO_HTML}}
+                </div>
+                <div class="agency-logo">
+                    {{AGENCY_LOGO_HTML}}
+                </div>
+            </div>
+
+            <div class="hero-badge">Proposal</div>
+            <p class="hero-date">{{DATE}} / {{AGENCY_SLUG}} proposal</p>
+            <h1 class="hero-title">Prepared for<br>{{CLIENT_NAME}}</h1>
+            <p class="hero-tagline">{{AGENCY_TAGLINE}}</p>
+        </div>
+    </section>
+
+    <!-- 01 / What We Discussed -->
+    <section>
+        <div class="container">
+            <div class="section-label">01 / What We Discussed</div>
+            <div class="card accent-border">
+                {{WHAT_WE_DISCUSSED}}
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 / The Partnership -->
+    <section>
+        <div class="container">
+            <div class="section-label">02 / The Partnership</div>
+            <h2>Performance Marketing at Scale</h2>
+            <p class="section-desc">We've managed over $70M in Meta and Google Ads, producing 150+ AI-generated creatives per month for brands across ecommerce, SaaS, and local services. Our approach combines performance marketing expertise with AI-powered creative production to drive measurable growth.</p>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-value">$70M+</span>
+                    <span class="stat-label">Total spend managed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">$30M+</span>
+                    <span class="stat-label">Under management</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">150+</span>
+                    <span class="stat-label">AI creatives per month</span>
+                </div>
+            </div>
+
+            <div class="image-container">
+                <img src="images/Spend Under Management.png" alt="Spend Under Management" />
+            </div>
+
+            <h3 style="margin-top: 64px; margin-bottom: 24px;">What We Do</h3>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Paid Media</h3>
+                    <p>Meta Ads, Google Ads, TikTok Ads -- full-funnel campaign management optimized for ROAS and customer acquisition.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Email & Lifecycle</h3>
+                    <p>Klaviyo and Iterable management -- automated flows, segmentation, and retention strategies that maximize LTV.</p>
+                </div>
+                <div class="service-card">
+                    <h3>AI Creative Production</h3>
+                    <p>150+ creatives per month -- AI-powered generation, testing, and optimization at a pace traditional agencies can't match.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Data & Attribution</h3>
+                    <p>Server-side tracking, cohort analysis, and multi-touch attribution to understand true performance and LTV.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 03 / How We Launch -->
+    <section>
+        <div class="container">
+            <div class="section-label">03 / How We Launch</div>
+            <h2>Your First Five Weeks</h2>
+            <p class="section-desc">We value speed, transparency, and efficiency. Our goal is to get campaigns live within days, not weeks. Here's exactly what happens in your first five weeks working with us.</p>
+
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number mono">WEEK 01</div>
+                    <h3>Foundation & Launch</h3>
+                    <ul class="step-items">
+                        <li>Complete account audit & competitive analysis</li>
+                        <li>Set up server-side tracking infrastructure</li>
+                        <li>Launch initial test campaigns</li>
+                        <li>Establish reporting dashboard with live data</li>
+                        <li>Weekly kickoff call to align on strategy</li>
+                    </ul>
+                    <span class="step-time">Days 1-7</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number mono">WEEK 02</div>
+                    <h3>Clarity & Creative Momentum</h3>
+                    <ul class="step-items">
+                        <li>Analyze early performance data & identify winners</li>
+                        <li>Deploy AI creative testing (50+ variants)</li>
+                        <li>Optimize audience targeting based on data</li>
+                        <li>Weekly strategy sync to review performance</li>
+                        <li>Scale winning campaigns with increased budgets</li>
+                    </ul>
+                    <span class="step-time">Days 8-14</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number mono">WEEK 03</div>
+                    <h3>LTV & Collaboration</h3>
+                    <ul class="step-items">
+                        <li>Implement cohort analysis & LTV tracking</li>
+                        <li>Focus on retention & email integration</li>
+                        <li>Scale winning campaigns to next budget tier</li>
+                        <li>Deep-dive performance review meeting</li>
+                        <li>Identify opportunities for expansion</li>
+                    </ul>
+                    <span class="step-time">Days 15-21</span>
+                </div>
+            </div>
+
+            <div class="steps-grid-bottom">
+                <div class="step">
+                    <div class="step-number mono">WEEK 04</div>
+                    <h3>Iteration & Scale</h3>
+                    <ul class="step-items">
+                        <li>Expand budgets on proven winners</li>
+                        <li>Test new platforms and placements</li>
+                        <li>Refine creative strategy based on data</li>
+                        <li>Monthly reporting & strategic planning</li>
+                        <li>Optimize for efficiency and profitability</li>
+                    </ul>
+                    <span class="step-time">Days 22-28</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number mono">WEEK 05</div>
+                    <h3>Collaboration & Leverage</h3>
+                    <ul class="step-items">
+                        <li>Full account optimization across all channels</li>
+                        <li>Strategic planning for next 90 days</li>
+                        <li>Team alignment on goals & KPIs</li>
+                        <li>Establish ongoing optimization framework</li>
+                        <li>Identify long-term growth opportunities</li>
+                    </ul>
+                    <span class="step-time">Days 29-35</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 04 / Why Us -->
+    <section class="why-us-section">
+        <div class="container">
+            <div class="section-label">04 / Why Us</div>
+            <h2>What Makes Us Different</h2>
+
+            <div class="feature-card">
+                <h3>We use AI to create, test, and iterate on advertising creative at a pace that would be impossible with traditional methods.</h3>
+                <p>Most agencies test 5-10 creatives per month. We test 150+. Our AI-powered workflow allows us to generate, test, and optimize creative at unprecedented speed. Every creative is informed by data from your best performers.</p>
+                <p>This means faster learning cycles, more winning creatives, and better overall performance. While competitors are waiting weeks to evaluate a single creative concept, we've already tested dozens of variations and identified the winners.</p>
+                <div class="image-container" style="border-color: var(--border);">
+                    <img src="images/Creative Feedback Loop Overview.png" alt="AI Creative Feedback Loop" />
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h3>We don't wait weeks to know what works. Our testing framework identifies winners in days.</h3>
+                <p>Traditional agencies run creative for 2-3 weeks before making decisions. We use statistical significance testing and early performance indicators to identify winners within 48-72 hours. This means more tests, faster learning, and better results.</p>
+                <p>Our approach combines rapid testing with disciplined budget allocation. We start small, identify signals quickly, and scale aggressively when we find winners. This maximizes your return on ad spend while minimizing wasted budget on underperformers.</p>
+                <div class="image-container" style="border-color: var(--border);">
+                    <img src="images/Brand Silo Creative Plot Graph.png" alt="Creative Performance Over Time" />
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h3>We organize campaigns into 'Brand Silos' -- isolated testing environments where we can rapidly experiment without risking account health.</h3>
+                <p>Each Brand Silo operates independently with its own budget, creative strategy, and audience. This allows us to test radically different approaches simultaneously. Winners graduate to your main brand campaigns. Losers are killed quickly with minimal waste.</p>
+                <p style="margin-bottom: 0;">This strategy protects your main brand account from algorithm disruption while enabling aggressive experimentation. It's how we maintain performance stability while continuously pushing the boundaries of what's possible.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 05 / Communication -->
+    <section>
+        <div class="container">
+            <div class="section-label">05 / Communication</div>
+            <h2>How We Stay Aligned</h2>
+            <p class="section-desc">Transparency and collaboration are core to how we work. Here's our communication cadence:</p>
+
+            <div class="cadence-grid">
+                <div class="cadence-item">
+                    <span class="cadence-frequency">Daily</span>
+                    <h4>Live Performance Dashboard</h4>
+                    <p>24/7 access to real-time performance data. See exactly how your campaigns are performing at any moment. Plus async Slack updates on key metrics and opportunities.</p>
+                </div>
+
+                <div class="cadence-item">
+                    <span class="cadence-frequency">Weekly</span>
+                    <h4>Strategy Calls & Creative Reviews</h4>
+                    <p>30-minute sync to review performance, discuss new creative concepts, and align on priorities for the week ahead. Fast-paced and action-oriented.</p>
+                </div>
+
+                <div class="cadence-item">
+                    <span class="cadence-frequency">Monthly</span>
+                    <h4>Deep-Dive Performance Reports</h4>
+                    <p>Comprehensive analysis of campaign performance, cohort data, LTV trends, and strategic recommendations for the month ahead. Includes competitive insights and market trends.</p>
+                </div>
+
+                <div class="cadence-item">
+                    <span class="cadence-frequency">Yearly</span>
+                    <h4>Annual Planning & Goal Setting</h4>
+                    <p>Multi-quarter roadmap development, annual budget planning, and strategic goal setting to align marketing with business objectives.</p>
+                </div>
+            </div>
+
+            <div class="image-container">
+                <img src="images/Daily performance mapping.png" alt="Performance Dashboard Example" />
+            </div>
+        </div>
+    </section>
+
+    <!-- 06 / Pricing -->
+    <section>
+        <div class="container">
+            <div class="pricing-header">
+                <div class="section-label">06 / Pricing</div>
+                <h2 style="max-width: none;">Investment Options</h2>
+            </div>
+
+            <div class="pricing-grid">
+                {{PRICING_HTML}}
+            </div>
+
+            <p class="pricing-note">
+                Management fees shown do NOT include ad spend budget. Ad spend is paid separately to platforms. Content creation is scoped separately.
+            </p>
+        </div>
+    </section>
+
+    <!-- 07 / Getting Started -->
+    <section>
+        <div class="container">
+            <div class="section-label">07 / Getting Started</div>
+            <h2>Next Steps</h2>
+            <p class="section-desc">Here's what happens once we decide to work together:</p>
+
+            <div class="getting-started-grid">
+                <div class="getting-started-col">
+                    <h3>What we'll deliver</h3>
+                    <ul class="checklist">
+                        <li>Complete account audit & competitive analysis</li>
+                        <li>Reporting dashboard with live performance data</li>
+                        <li>Campaign strategy & launch plan</li>
+                        <li>Weekly creative assets</li>
+                        <li>Monthly performance reports</li>
+                        {{DELIVERABLES_HTML}}
+                    </ul>
+                </div>
+
+                <div class="getting-started-col">
+                    <h3>What we need from you</h3>
+                    <ul class="checklist">
+                        <li>Meta Business Manager admin access</li>
+                        <li>Google Ads account admin access</li>
+                        <li>Klaviyo admin access (if applicable)</li>
+                        <li>Brand assets (logos, colors, fonts, guidelines)</li>
+                        <li>Google Drive share with existing creative</li>
+                        {{REQUIREMENTS_HTML}}
+                    </ul>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="mailto:{{CONTACT_EMAIL}}" class="btn-primary">Let's Get Started &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 08 / Results & Testimonials -->
+    <div style="padding: 120px 0;">
+        <div class="testimonials-section">
+            <div class="gradient-ambient"><span></span></div>
+            <div class="container" style="position: relative; z-index: 2;">
+                <div class="section-label">08 / Results & Testimonials</div>
+                <h2>What Clients Say</h2>
+
+                <!-- TODO: replace these placeholder testimonials with your own real, permissioned testimonials. -->
+                <div class="testimonials-grid">
+                    <div class="testimonial">
+                        <p class="testimonial-text">"Replace this with a real testimonial from a real client (with permission)."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">JD</div>
+                            <div>
+                                <div class="testimonial-name">Jane Doe</div>
+                                <div class="testimonial-role">Example Co</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial">
+                        <p class="testimonial-text">"Replace this with another real testimonial."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">JS</div>
+                            <div>
+                                <div class="testimonial-name">John Smith</div>
+                                <div class="testimonial-role">ACME Corp</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial">
+                        <p class="testimonial-text">"Replace this with another real testimonial."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">JR</div>
+                            <div>
+                                <div class="testimonial-name">Jamie Roe</div>
+                                <div class="testimonial-role">Another Co</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optional results images. Drop your own anonymized result graphics in ./proposal-images/ -->
+                <!-- <div class="results-image-row"><img src="images/results-1.png" alt="Performance Results" /></div> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 09 / About The Founder -->
+    <div style="padding-bottom: 120px;">
+        <div class="founder-section">
+            <div class="gradient-ambient"><span></span></div>
+            <div class="founder-inner">
+                <div class="section-label">09 / {{ABOUT_SECTION_LABEL}}</div>
+                <h2 style="max-width: none; text-align: center; margin-left: auto; margin-right: auto;">{{FOUNDER_NAME}}</h2>
+                <p class="founder-quote">Building companies at the intersection of performance marketing, AI, and product.</p>
+                <div class="founder-bio" style="text-align: left;">
+                    <!-- TODO: replace the bio below with your own. -->
+                    <p><strong>Agency:</strong> Started and scaled an agency to $X spend under management.</p>
+                    <p><strong>Software:</strong> Built and launched a consumer app, ongoing.</p>
+                    <p><strong>Ecommerce:</strong> Scaled a DTC brand to $X/month, acquired.</p>
+                    <p style="margin-top: 24px; margin-bottom: 0;">
+                        <a href="{{FOUNDER_LINKEDIN_URL}}" style="font-weight: 500;">Connect on LinkedIn &rarr;</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mega Footer -->
+    <footer class="mega-footer">
+        <div class="gradient-ambient"><span></span></div>
+        <div class="mega-footer-logo">{{AGENCY_NAME}}</div>
+        <div class="mega-footer-inner">
+            <div class="mega-footer-left">&copy; {{YEAR}} {{AGENCY_NAME}}. All rights reserved.</div>
+            <div class="mega-footer-status">All systems operational</div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

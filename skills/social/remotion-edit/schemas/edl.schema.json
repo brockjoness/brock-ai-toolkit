@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Remotion Edit EDL",
+  "description": "Edit Decision List for the remotion-edit skill. Versioned for forward compatibility.",
+  "type": "object",
+  "required": ["version", "source", "scenes"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "source": {
+      "type": "object",
+      "required": ["path", "hash", "fps", "width", "height", "durationFrames"],
+      "properties": {
+        "path": { "type": "string", "description": "Absolute path to source MP4" },
+        "hash": { "type": "string", "description": "SHA256 first 12 chars" },
+        "fps": { "type": "number" },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "durationFrames": { "type": "integer" }
+      }
+    },
+    "outputFps": { "type": "integer", "default": 30 },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "inFrame", "outFrame"],
+        "properties": {
+          "id": { "type": "string" },
+          "inFrame": { "type": "integer", "description": "Source frame in (in source fps)" },
+          "outFrame": { "type": "integer", "description": "Source frame out (in source fps)" },
+          "transition": {
+            "type": "string",
+            "enum": ["cut", "whip-left", "whip-right", "zoom-punch", "fade"],
+            "default": "cut"
+          },
+          "transitionDurationFrames": { "type": "integer", "default": 8 },
+          "textBehind": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "fontSize": { "type": "integer", "default": 280 },
+              "color": { "type": "string", "default": "#a66e4c" },
+              "animation": {
+                "type": "string",
+                "enum": ["rise", "typeOn", "slideX", "static"],
+                "default": "rise"
+              },
+              "position": {
+                "type": "string",
+                "enum": ["center", "top", "bottom", "left", "right"],
+                "default": "center"
+              }
+            }
+          },
+          "captions": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean", "default": true },
+              "style": {
+                "type": "string",
+                "enum": ["minimal", "highlight", "bold-bottom"],
+                "default": "minimal"
+              },
+              "size": {
+                "type": "string",
+                "enum": ["small", "medium", "large"],
+                "default": "medium"
+              },
+              "position": {
+                "type": "string",
+                "enum": ["top", "middle", "bottom"],
+                "default": "bottom"
+              },
+              "maxVisibleWords": { "type": "integer", "default": 7 }
+            }
+          },
+          "callouts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["atFrame", "text"],
+              "properties": {
+                "atFrame": { "type": "integer", "description": "Frame within scene (0 = scene start)" },
+                "durationFrames": { "type": "integer", "default": 60 },
+                "text": { "type": "string" },
+                "anchor": {
+                  "type": "object",
+                  "properties": {
+                    "x": { "type": "number", "description": "0-1 normalized" },
+                    "y": { "type": "number", "description": "0-1 normalized" }
+                  }
+                },
+                "offset": {
+                  "type": "object",
+                  "properties": {
+                    "dx": { "type": "number", "default": 0 },
+                    "dy": { "type": "number", "default": 0 }
+                  }
+                }
+              }
+            }
+          },
+          "lowerThird": {
+            "type": "object",
+            "properties": {
+              "atFrame": { "type": "integer", "default": 30 },
+              "durationFrames": { "type": "integer", "default": 150 },
+              "label": { "type": "string" },
+              "sub": { "type": "string" }
+            }
+          },
+          "zoomPunch": {
+            "type": "object",
+            "properties": {
+              "atFrame": { "type": "integer" },
+              "magnitude": { "type": "number", "default": 1.08 }
+            }
+          },
+          "disableTextBehind": {
+            "type": "boolean",
+            "default": false,
+            "description": "Escape hatch for frames with bad matte (hair/glasses artifacts)"
+          },
+          "vignette": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    "hook": {
+      "type": "object",
+      "description": "Optional opening hook (0-3s full-screen text)",
+      "properties": {
+        "text": { "type": "string" },
+        "durationFrames": { "type": "integer", "default": 90 }
+      }
+    },
+    "outro": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "subText": { "type": "string" },
+        "durationFrames": { "type": "integer", "default": 90 }
+      }
+    }
+  }
+}
